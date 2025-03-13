@@ -1,7 +1,8 @@
 export default function ProfilePage() {
     return (
-        <div>
-            <h1>Page de profil</h1>
-        </div>
+        <main>
+            <h1>Profil</h1>
+            <p>Bienvenue sur la page de profil utilisateur.</p>
+        </main>
     );
 }
