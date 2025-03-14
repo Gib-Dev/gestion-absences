@@ -5,18 +5,11 @@ export async function GET() {
   try {
     const users = await prisma.user.findMany();
 
-    if (!users) {
-      return new Response(
-        JSON.stringify({ error: "Aucun utilisateur trouvé" }),
-        { status: 404, headers: { "Content-Type": "application/json" } }
-      );
-    }
-
     const usersPlain = users.map((user) => ({
       id: user.id,
       email: user.email,
       name: user.name,
-      createdAt: user.createdAt ? user.createdAt.toISOString() : null,
+      createdAt: user.createdAt?.toISOString() || null,
     }));
 
     return new Response(JSON.stringify(usersPlain), {
@@ -24,7 +17,7 @@ export async function GET() {
       headers: { "Content-Type": "application/json" },
     });
   } catch (error) {
-    console.error("Erreur GET /api/users :", error);
+    console.error("Erreur GET /api/users :", error?.message || error);
     return new Response(
       JSON.stringify({
         error: "Erreur lors de la récupération des utilisateurs",
@@ -46,7 +39,6 @@ export async function POST(req) {
       );
     }
 
-    // ✅ Hasher le mot de passe AVANT de le stocker
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const newUser = await prisma.user.create({
@@ -67,7 +59,7 @@ export async function POST(req) {
       { status: 201, headers: { "Content-Type": "application/json" } }
     );
   } catch (error) {
-    console.error("Erreur POST /api/users :", error);
+    console.error("Erreur POST /api/users :", error?.message || error);
     return new Response(
       JSON.stringify({ error: "Erreur lors de la création de l'utilisateur" }),
       { status: 500, headers: { "Content-Type": "application/json" } }
