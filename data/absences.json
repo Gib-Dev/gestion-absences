@@ -1,1 +1,12 @@
-[]
+[
+  {
+    "name": "Test",
+    "date": "2025-03-20",
+    "reason": "absence"
+  },
+  {
+    "name": "Test2",
+    "date": "2025-03-26",
+    "reason": "absence2"
+  }
+]
