@@ -1,52 +1,59 @@
-'use client';
-import { useState } from 'react';
+// app/components/FormUser.jsx
+"use client";
 
-export default function FormUser({ onUserAdded }) {
-    const [user, setUser] = useState({ name: '', email: '' });
-    const [message, setMessage] = useState('');
+import { useState } from "react";
+import { toast } from "react-toastify";
 
-    const handleChange = (e) => {
-        setUser({ ...user, [e.target.name]: e.target.value });
-    };
+export default function FormUser({ user, onSave }) {
+    const [name, setName] = useState(user ? user.name : "");
+    const [email, setEmail] = useState(user ? user.email : "");
+    const [role, setRole] = useState(user ? user.role : "user");
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-
-        if (!user.name || !user.email) {
-            setMessage("Tous les champs sont requis !");
+        if (!name || !email) {
+            toast.error("Tous les champs sont requis.");
             return;
         }
 
-        onUserAdded(user);
-        setMessage("Utilisateur ajouté ✅");
-        setUser({ name: '', email: '' });
+        const userData = { name, email, role };
+        onSave(userData);
+        toast.success(user ? "Utilisateur mis à jour ✅" : "Utilisateur ajouté ✅");
+        setName("");
+        setEmail("");
+        setRole("user");
     };
 
     return (
-        <div className="p-4 border rounded-md bg-white shadow-md max-w-md mx-auto mt-4">
-            <h3 className="text-lg font-bold mb-4">Ajouter un utilisateur</h3>
-            <form onSubmit={handleSubmit} className="flex flex-col gap-3">
-                <input
-                    type="text"
-                    name="name"
-                    placeholder="Nom"
-                    value={user.name}
-                    onChange={handleChange}
-                    className="p-2 border rounded"
-                />
-                <input
-                    type="email"
-                    name="email"
-                    placeholder="Email"
-                    value={user.email}
-                    onChange={handleChange}
-                    className="p-2 border rounded"
-                />
-                <button type="submit" className="bg-blue-600 text-white p-2 rounded">
-                    Ajouter
-                </button>
-            </form>
-            {message && <p className="mt-4 text-sm text-gray-700">{message}</p>}
-        </div>
+        <form onSubmit={handleSubmit} className="bg-white p-4 rounded-lg shadow-md space-y-4">
+            <h3 className="font-semibold text-lg">👤 {user ? "Modifier" : "Ajouter"} un utilisateur</h3>
+            <input
+                type="text"
+                placeholder="Nom"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                className="w-full border p-2 rounded"
+                required
+            />
+            <input
+                type="email"
+                placeholder="Email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="w-full border p-2 rounded"
+                required
+            />
+            <select
+                value={role}
+                onChange={(e) => setRole(e.target.value)}
+                className="w-full border p-2 rounded"
+            >
+                <option value="user">Utilisateur</option>
+                <option value="admin">Admin</option>
+            </select>
+            <button type="submit" className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">
+                {user ? "Mettre à jour" : "Ajouter"}
+            </button>
+        </form>
     );
 }
