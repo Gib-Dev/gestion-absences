@@ -1,4 +1,5 @@
-'use client';
+// app/dashboard/page.jsx
+"use client";
 
 import UserList from "../components/UserList";
 import FormAbsence from "../components/FormAbsence";

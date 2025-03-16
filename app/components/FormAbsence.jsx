@@ -1,19 +1,17 @@
+// app/components/FormAbsence.jsx
 "use client";
 
 import { useState } from "react";
+import { toast } from "react-toastify";
+import { FaPlus } from "react-icons/fa";
 
 export default function FormAbsence({ onAdd }) {
     const [absence, setAbsence] = useState({ name: "", date: "", reason: "" });
-    const [message, setMessage] = useState("");
-
-    const handleChange = (e) => {
-        setAbsence({ ...absence, [e.target.name]: e.target.value });
-    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (!absence.name || !absence.date || !absence.reason) {
-            setMessage("Tous les champs sont requis.");
+            toast.error("Tous les champs sont requis.");
             return;
         }
 
@@ -27,11 +25,11 @@ export default function FormAbsence({ onAdd }) {
 
             if (!res.ok) throw new Error(data.error || "Erreur lors de l'enregistrement");
 
-            setMessage("✅ Absence enregistrée avec succès !");
+            toast.success("✅ Absence enregistrée avec succès !");
             setAbsence({ name: "", date: "", reason: "" });
             onAdd && onAdd();
         } catch (err) {
-            setMessage("❌ " + err.message);
+            toast.error("❌ " + err.message);
         }
     };
 
@@ -42,7 +40,7 @@ export default function FormAbsence({ onAdd }) {
                 type="text"
                 name="name"
                 value={absence.name}
-                onChange={handleChange}
+                onChange={(e) => setAbsence({ ...absence, name: e.target.value })}
                 placeholder="Nom"
                 className="w-full border p-2 rounded"
             />
@@ -50,21 +48,20 @@ export default function FormAbsence({ onAdd }) {
                 type="date"
                 name="date"
                 value={absence.date}
-                onChange={handleChange}
+                onChange={(e) => setAbsence({ ...absence, date: e.target.value })}
                 className="w-full border p-2 rounded"
             />
             <input
                 type="text"
                 name="reason"
                 value={absence.reason}
-                onChange={handleChange}
+                onChange={(e) => setAbsence({ ...absence, reason: e.target.value })}
                 placeholder="Raison"
                 className="w-full border p-2 rounded"
             />
             <button type="submit" className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">
-                Enregistrer
+                <FaPlus className="mr-2" /> Enregistrer
             </button>
-            {message && <p className="text-sm text-green-600 mt-2">{message}</p>}
         </form>
     );
 }

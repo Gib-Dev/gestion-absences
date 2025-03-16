@@ -1,3 +1,4 @@
+// app/api/absences/route.js
 "use server";
 
 import path from "path";
@@ -23,6 +24,7 @@ export async function POST(req) {
     const data = JSON.parse(fileContent);
 
     const newAbsence = {
+      id: Date.now(),
       name: body.name,
       date: body.date,
       reason: body.reason,
@@ -43,7 +45,7 @@ export async function DELETE(req) {
     const fileContent = await fs.readFile(dataFilePath, "utf8");
     let data = JSON.parse(fileContent);
 
-    data.splice(id, 1);
+    data = data.filter((absence) => absence.id !== id);
     await fs.writeFile(dataFilePath, JSON.stringify(data, null, 2));
 
     return NextResponse.json({ message: "Absence supprimée avec succès" });

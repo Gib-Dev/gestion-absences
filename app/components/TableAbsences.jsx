@@ -1,3 +1,4 @@
+// app/components/TableAbsences.jsx
 "use client";
 
 import { useEffect, useState } from "react";
@@ -78,7 +79,11 @@ export default function TableAbsences() {
                 </tbody>
             </table>
 
-            <Modal isOpen={modalIsOpen} onRequestClose={closeModal} className="bg-white p-6 rounded shadow-lg w-1/3 mx-auto mt-32">
+            <Modal
+                isOpen={modalIsOpen}
+                onRequestClose={closeModal}
+                className="bg-white p-6 rounded shadow-lg w-1/3 mx-auto mt-32"
+            >
                 <h2 className="text-lg font-semibold mb-4">Confirmation</h2>
                 <p className="mb-4">Voulez-vous vraiment supprimer cette absence ?</p>
                 <div className="flex justify-end space-x-2">

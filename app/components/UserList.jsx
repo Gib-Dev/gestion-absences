@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { FaUser } from "react-icons/fa";
 
 export default function UserList() {
     const [users, setUsers] = useState([]);
@@ -24,7 +23,7 @@ export default function UserList() {
     return (
         <div className="bg-white p-4 rounded-lg shadow-md">
             <h2 className="text-lg font-semibold text-[#0C120C] mb-2 flex items-center gap-2">
-                <FaUser /> Liste des utilisateurs
+                Liste des utilisateurs
             </h2>
             {error && <p className="text-red-500">{error}</p>}
             <ul className="bg-white p-4 rounded-lg shadow-md">
