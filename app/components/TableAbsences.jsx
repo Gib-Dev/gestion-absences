@@ -1,4 +1,4 @@
-// app/components/TableAbsences.jsx
+// ✅ app/components/TableAbsences.jsx corrigé avec clé unique
 "use client";
 
 import { useEffect, useState } from "react";
@@ -64,18 +64,29 @@ export default function TableAbsences() {
                     </tr>
                 </thead>
                 <tbody>
-                    {absences.map((absence, index) => (
-                        <tr key={index} className="border-t">
-                            <td className="p-2">{absence.name}</td>
-                            <td className="p-2">{absence.date}</td>
-                            <td className="p-2">{absence.reason}</td>
-                            <td className="p-2">
-                                <button onClick={() => openModal(index)} className="text-red-600 hover:text-red-800">
-                                    <FaTrash />
-                                </button>
+                    {absences?.length > 0 ? (
+                        absences.map((absence) => (
+                            <tr key={`${absence.id}-${absence.date}`} className="border-t">
+                                <td className="p-2">{absence.name}</td>
+                                <td className="p-2">{absence.date}</td>
+                                <td className="p-2">{absence.reason}</td>
+                                <td className="p-2">
+                                    <button
+                                        onClick={() => openModal(absence.id)}
+                                        className="text-red-600 hover:text-red-800"
+                                    >
+                                        <FaTrash />
+                                    </button>
+                                </td>
+                            </tr>
+                        ))
+                    ) : (
+                        <tr>
+                            <td colSpan="4" className="p-2 text-center">
+                                Aucune absence enregistrée.
                             </td>
                         </tr>
-                    ))}
+                    )}
                 </tbody>
             </table>
 
@@ -87,8 +98,18 @@ export default function TableAbsences() {
                 <h2 className="text-lg font-semibold mb-4">Confirmation</h2>
                 <p className="mb-4">Voulez-vous vraiment supprimer cette absence ?</p>
                 <div className="flex justify-end space-x-2">
-                    <button onClick={closeModal} className="bg-gray-300 px-4 py-2 rounded hover:bg-gray-400">Annuler</button>
-                    <button onClick={handleDelete} className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700">Supprimer</button>
+                    <button
+                        onClick={closeModal}
+                        className="bg-gray-300 px-4 py-2 rounded hover:bg-gray-400"
+                    >
+                        Annuler
+                    </button>
+                    <button
+                        onClick={handleDelete}
+                        className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700"
+                    >
+                        Supprimer
+                    </button>
                 </div>
             </Modal>
         </div>

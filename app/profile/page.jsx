@@ -24,7 +24,7 @@ export default function ProfilePage() {
                     <>
                         <p className="text-gray-700 mb-2"><strong>Nom :</strong> {user.name}</p>
                         <p className="text-gray-700 mb-2"><strong>Email :</strong> {user.email}</p>
-                        <p className="text-gray-700 mb-2"><strong>Rôle :</strong> Admin ou Utilisateur (selon config)</p>
+                        <p className="text-gray-700 mb-2"><strong>Rôle :</strong> Admin ou Utilisateur</p>
                     </>
                 ) : (
                     <p>Chargement...</p>

@@ -6,9 +6,21 @@
     "role": "admin"
   },
   {
-    "id": 1742101553022,
-    "name": "UserTest",
-    "email": "usertest@gestion.com",
+    "id": 1742188019605,
+    "name": "test2",
+    "email": "test@gestion.com",
+    "role": "user"
+  },
+  {
+    "id": 1742193603994,
+    "name": "Test",
+    "email": "email@gmail.com",
+    "role": "user"
+  },
+  {
+    "id": 1742195077481,
+    "name": "test",
+    "email": "test@gestion.com",
     "role": "user"
   }
 ]

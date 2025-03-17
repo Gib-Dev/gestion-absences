@@ -2,22 +2,17 @@
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-ashgray text-night">
+    <div className="min-h-screen bg-ghostwhite text-night">
       {/* En-tête */}
-      <header className="bg-magenta p-6 shadow-lg">
+      <header className="bg-white p-6 shadow-sm">
         <div className="container mx-auto flex justify-between items-center">
-          <h1 className="text-3xl font-bold text-ghostwhite">
+          <h1 className="text-3xl font-bold">
             Simplifiez la gestion des absences avec notre outil intuitif !
           </h1>
           <div>
             <a href="/auth/register">
-              <button className="bg-lapis text-ghostwhite px-4 py-2 rounded mr-2 hover:bg-opacity-90 transition-all">
+              <button className="bg-magenta text-white px-4 py-2 rounded hover:bg-opacity-90 transition-all">
                 Créer un compte
-              </button>
-            </a>
-            <a href="/auth/login">
-              <button className="bg-ghostwhite text-night px-4 py-2 rounded hover:bg-opacity-90 transition-all">
-                Se connecter
               </button>
             </a>
           </div>
@@ -35,7 +30,7 @@ export default function Home() {
               Optimisez votre temps et simplifiez vos processus avec notre solution tout-en-un.
             </p>
             <a href="/auth/register">
-              <button className="bg-magenta text-ghostwhite px-6 py-3 rounded hover:bg-opacity-90 transition-all">
+              <button className="bg-magenta text-white px-6 py-3 rounded hover:bg-opacity-90 transition-all">
                 Commencez maintenant
               </button>
             </a>
@@ -51,22 +46,20 @@ export default function Home() {
       </section>
 
       {/* Fonctionnalités principales */}
-      <section className="bg-ghostwhite py-12">
-        <div className="container mx-auto p-6">
-          <h2 className="text-2xl font-bold text-center mb-8">Fonctionnalités principales</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-all">
-              <h3 className="text-xl font-bold mb-2 text-magenta">Tableau de bord intuitif</h3>
-              <p className="text-night">Obtenez une vue d'ensemble des absences en un clin d'œil.</p>
-            </div>
-            <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-all">
-              <h3 className="text-xl font-bold mb-2 text-magenta">Notifications automatiques</h3>
-              <p className="text-night">Recevez des rappels pour les absences importantes.</p>
-            </div>
-            <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-all">
-              <h3 className="text-xl font-bold mb-2 text-magenta">Rapports détaillés</h3>
-              <p className="text-night">Analysez les tendances pour une meilleure planification.</p>
-            </div>
+      <section className="container mx-auto py-12">
+        <h2 className="text-2xl font-bold text-center mb-8">Fonctionnalités principales</h2>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-all">
+            <h3 className="text-xl font-bold mb-2">Tableau de bord intuitif</h3>
+            <p>Obtenez une vue d'ensemble des absences en un clin d'œil.</p>
+          </div>
+          <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-all">
+            <h3 className="text-xl font-bold mb-2">Notifications automatiques</h3>
+            <p>Recevez des rappels pour les absences importantes.</p>
+          </div>
+          <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-all">
+            <h3 className="text-xl font-bold mb-2">Rapports détaillés</h3>
+            <p>Analysez les tendances pour une meilleure planification.</p>
           </div>
         </div>
       </section>
@@ -76,28 +69,28 @@ export default function Home() {
         <h2 className="text-2xl font-bold text-center mb-8">Ce que nos utilisateurs disent</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-all">
-            <p className="italic text-night">
+            <p className="italic">
               "Depuis que j'utilise cet outil, la gestion des absences est devenue un jeu d'enfant !"
             </p>
-            <p className="font-bold mt-2 text-magenta">- Julie, DRH</p>
+            <p className="font-bold mt-2">- Julie, DRH</p>
           </div>
           <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-all">
-            <p className="italic text-night">
+            <p className="italic">
               "Un outil indispensable pour toute équipe qui souhaite gérer les absences efficacement."
             </p>
-            <p className="font-bold mt-2 text-magenta">- Marc, Responsable pédagogique</p>
+            <p className="font-bold mt-2">- Marc, Responsable pédagogique</p>
           </div>
         </div>
       </section>
 
       {/* Appel à l'action final */}
-      <section className="bg-lapis text-ghostwhite py-12">
-        <div className="container mx-auto p-6 text-center">
+      <section className="container mx-auto py-12">
+        <div className="text-center">
           <h2 className="text-2xl font-bold mb-4">
             Prêt à révolutionner la gestion des absences ?
           </h2>
           <a href="/auth/register">
-            <button className="bg-magenta text-ghostwhite px-6 py-3 rounded hover:bg-opacity-90 transition-all">
+            <button className="bg-magenta text-white px-6 py-3 rounded hover:bg-opacity-90 transition-all">
               Créez un compte dès aujourd'hui !
             </button>
           </a>

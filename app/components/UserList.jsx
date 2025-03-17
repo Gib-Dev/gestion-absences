@@ -58,17 +58,23 @@ export default function UserList() {
 
     const handleDelete = async (id) => {
         try {
-            const res = await fetch(`/api/users?id=${id}`, {
+            const res = await fetch("/api/users", {
                 method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ id }), // ✅ id dans le body
             });
 
             if (!res.ok) throw new Error("Erreur lors de la suppression");
 
+            toast.success("✅ Utilisateur supprimé");
             fetchUsers();
         } catch (err) {
             toast.error("❌ " + err.message);
         }
     };
+
 
     return (
         <div className="bg-white p-4 rounded-lg shadow-md">

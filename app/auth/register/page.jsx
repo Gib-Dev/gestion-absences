@@ -3,6 +3,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { toast } from "react-toastify";
 import { FaUser, FaLock, FaEnvelope } from "react-icons/fa";
 
 export default function RegisterPage() {
@@ -13,12 +14,29 @@ export default function RegisterPage() {
         setForm({ ...form, [e.target.name]: e.target.value });
     };
 
-    const handleRegister = (e) => {
+    const handleRegister = async (e) => {
         e.preventDefault();
-        localStorage.setItem("user", JSON.stringify(form));
-        localStorage.setItem("auth", "true");
-        document.cookie = "auth=true; path=/";
-        router.push("/dashboard");
+        try {
+            const res = await fetch("/api/users", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    name: form.name,
+                    email: form.email,
+                    role: "user",
+                }),
+            });
+
+            if (!res.ok) throw new Error("Erreur lors de l'inscription");
+
+            localStorage.setItem("user", JSON.stringify(form));
+            localStorage.setItem("auth", "true");
+            document.cookie = "auth=true; path=/";
+            toast.success("✅ Inscription réussie ! Bienvenue 🎉");
+            router.push("/dashboard");
+        } catch (err) {
+            toast.error("❌ " + err.message);
+        }
     };
 
     return (
