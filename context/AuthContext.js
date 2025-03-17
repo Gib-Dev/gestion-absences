@@ -1,18 +1,45 @@
-import { createContext, useState, useEffect } from "react";
+// app/context/AuthContext.js
+"use client";
 
-export const AuthContext = createContext();
+import { createContext, useContext, useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 
-export function AuthProvider({ children }) {
+const AuthContext = createContext();
+
+export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
+  const router = useRouter();
 
   useEffect(() => {
-    const storedUser = JSON.parse(localStorage.getItem("user"));
-    setUser(storedUser);
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
+    }
   }, []);
 
+  const login = (email, password) => {
+    // Simuler une vérification simple (à améliorer  plus tard)
+    const fakeUser = {
+      id: 1,
+      name: "Utilisateur",
+      email,
+    };
+    localStorage.setItem("user", JSON.stringify(fakeUser));
+    setUser(fakeUser);
+    router.push("/dashboard");
+  };
+
+  const logout = () => {
+    localStorage.removeItem("user");
+    setUser(null);
+    router.push("/auth/login");
+  };
+
   return (
-    <AuthContext.Provider value={{ user, setUser }}>
+    <AuthContext.Provider value={{ user, login, logout }}>
       {children}
     </AuthContext.Provider>
   );
-}
+};
+
+export const useAuth = () => useContext(AuthContext);
