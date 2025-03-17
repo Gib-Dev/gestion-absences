@@ -2,20 +2,31 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer base {
+  body {
+    @apply bg-ghostwhite text-night font-sans antialiased;
   }
-}
 
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-bold text-night;
+  }
+
+  a {
+    @apply text-magenta hover:underline;
+  }
+
+  button {
+    @apply transition duration-300 ease-in-out;
+  }
+
+  input,
+  select,
+  textarea {
+    @apply w-full p-2 rounded border border-gray-300 text-night focus:outline-none focus:ring-2 focus:ring-magenta;
+  }
 }

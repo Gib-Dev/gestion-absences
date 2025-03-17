@@ -1,16 +1,108 @@
+"use client";
+
 export default function Home() {
   return (
-    <main className="min-h-screen flex items-center justify-center bg-gray-100 text-center p-6">
-      <div className="max-w-xl bg-white shadow-lg rounded-xl p-10">
-        <h1 className="text-3xl font-bold mb-4">Bienvenue dans Gestion Absences</h1>
-        <p className="mb-6 text-gray-600">
-          Cette application permet de gérer facilement les absences et les utilisateurs dans une interface intuitive.
-        </p>
-        <div className="space-x-4">
-          <a href="/auth/login" className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Se connecter</a>
-          <a href="/auth/register" className="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700">S’inscrire</a>
+    <div className="min-h-screen bg-ashgray text-night">
+      {/* En-tête */}
+      <header className="bg-magenta p-6 shadow-lg">
+        <div className="container mx-auto flex justify-between items-center">
+          <h1 className="text-3xl font-bold text-ghostwhite">
+            Simplifiez la gestion des absences avec notre outil intuitif !
+          </h1>
+          <div>
+            <a href="/auth/register">
+              <button className="bg-lapis text-ghostwhite px-4 py-2 rounded mr-2 hover:bg-opacity-90 transition-all">
+                Créer un compte
+              </button>
+            </a>
+            <a href="/auth/login">
+              <button className="bg-ghostwhite text-night px-4 py-2 rounded hover:bg-opacity-90 transition-all">
+                Se connecter
+              </button>
+            </a>
+          </div>
         </div>
-      </div>
-    </main>
+      </header>
+
+      {/* Section de présentation */}
+      <section className="container mx-auto p-6">
+        <div className="flex flex-col md:flex-row items-center gap-8">
+          <div className="md:w-1/2">
+            <h2 className="text-2xl font-bold mb-4">
+              Notre plateforme vous permet de suivre et de gérer facilement les absences de vos employés ou étudiants en quelques clics.
+            </h2>
+            <p className="text-lg mb-4">
+              Optimisez votre temps et simplifiez vos processus avec notre solution tout-en-un.
+            </p>
+            <a href="/auth/register">
+              <button className="bg-magenta text-ghostwhite px-6 py-3 rounded hover:bg-opacity-90 transition-all">
+                Commencez maintenant
+              </button>
+            </a>
+          </div>
+          <div className="md:w-1/2">
+            <img
+              src="/images/banc.jpg"
+              alt="Gestion des absences"
+              className="rounded-lg shadow-lg w-full h-auto"
+            />
+          </div>
+        </div>
+      </section>
+
+      {/* Fonctionnalités principales */}
+      <section className="bg-ghostwhite py-12">
+        <div className="container mx-auto p-6">
+          <h2 className="text-2xl font-bold text-center mb-8">Fonctionnalités principales</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-all">
+              <h3 className="text-xl font-bold mb-2 text-magenta">Tableau de bord intuitif</h3>
+              <p className="text-night">Obtenez une vue d'ensemble des absences en un clin d'œil.</p>
+            </div>
+            <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-all">
+              <h3 className="text-xl font-bold mb-2 text-magenta">Notifications automatiques</h3>
+              <p className="text-night">Recevez des rappels pour les absences importantes.</p>
+            </div>
+            <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-all">
+              <h3 className="text-xl font-bold mb-2 text-magenta">Rapports détaillés</h3>
+              <p className="text-night">Analysez les tendances pour une meilleure planification.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Témoignages */}
+      <section className="container mx-auto py-12">
+        <h2 className="text-2xl font-bold text-center mb-8">Ce que nos utilisateurs disent</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-all">
+            <p className="italic text-night">
+              "Depuis que j'utilise cet outil, la gestion des absences est devenue un jeu d'enfant !"
+            </p>
+            <p className="font-bold mt-2 text-magenta">- Julie, DRH</p>
+          </div>
+          <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-all">
+            <p className="italic text-night">
+              "Un outil indispensable pour toute équipe qui souhaite gérer les absences efficacement."
+            </p>
+            <p className="font-bold mt-2 text-magenta">- Marc, Responsable pédagogique</p>
+          </div>
+        </div>
+      </section>
+
+      {/* Appel à l'action final */}
+      <section className="bg-lapis text-ghostwhite py-12">
+        <div className="container mx-auto p-6 text-center">
+          <h2 className="text-2xl font-bold mb-4">
+            Prêt à révolutionner la gestion des absences ?
+          </h2>
+          <a href="/auth/register">
+            <button className="bg-magenta text-ghostwhite px-6 py-3 rounded hover:bg-opacity-90 transition-all">
+              Créez un compte dès aujourd'hui !
+            </button>
+          </a>
+        </div>
+      </section>
+    </div>
   );
 }

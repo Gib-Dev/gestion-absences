@@ -14,7 +14,7 @@ export default function NavBar() {
     };
 
     return (
-        <nav className="bg-black text-white p-4 flex justify-between items-center">
+        <nav className="bg-white text-white p-4 flex justify-between items-center">
             <h1 className="text-lg font-bold">Gestion Absences</h1>
             <div className="space-x-4">
                 <Link href="/">Accueil</Link>
