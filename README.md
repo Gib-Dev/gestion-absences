@@ -27,3 +27,5 @@ Ce projet est une application web développée avec Next.js permettant de :
 ```bash
 git clone https://github.com/Gib-Dev/gestion-absences.git
 ```
+## Auteur
+Projet réalisé par [Abdoul Magid biteye, Moussa Alanabillah Kante, Thibaut Diatta, el adj Abdoulaye]
