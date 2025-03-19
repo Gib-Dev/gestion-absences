@@ -5,12 +5,12 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { AiOutlineHome, AiOutlineUser, AiOutlineLogin, AiOutlineLogout, AiOutlineUserAdd } from "react-icons/ai";
+import { BiBarChart } from "react-icons/bi"; // Icône pour Statistiques
 
 export default function NavBar() {
     const router = useRouter();
     const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-    // Vérifier l'état de connexion au chargement du composant
     useEffect(() => {
         const auth = localStorage.getItem("auth");
         setIsLoggedIn(!!auth);
@@ -35,7 +35,7 @@ export default function NavBar() {
                     height={40} 
                     className="rounded-full shadow-md hover:scale-110 transition-transform duration-200"
                 />
-                <span className="ml-3 text-lg font-bold">Gestion Absences</span>
+                <span className="ml-3 text-lg font-bold text-magenta">Gestion Absences</span>
             </Link>
 
             {/* MENU */}
@@ -44,11 +44,14 @@ export default function NavBar() {
                     <AiOutlineHome className="mr-1" /> Accueil
                 </Link>
 
-                <Link href="/statistics" className="hover:text-magenta flex items-center transition-colors duration-200 ease-in-out">
-                    📊 Statistiques
-                </Link>
+                {/* Afficher Statistiques SEULEMENT SI l'utilisateur est connecté */}
+                {isLoggedIn && (
+                    <Link href="/statistics" className="hover:text-magenta flex items-center transition-colors duration-200 ease-in-out">
+                        <BiBarChart className="mr-1" /> Statistiques
+                    </Link>
+                )}
 
-                {!isLoggedIn && (
+                {!isLoggedIn ? (
                     <>
                         <Link href="/auth/login" className="hover:text-magenta flex items-center transition-colors duration-200 ease-in-out">
                             <AiOutlineLogin className="mr-1" /> Connexion
@@ -57,9 +60,7 @@ export default function NavBar() {
                             <AiOutlineUserAdd className="mr-1" /> Inscription
                         </Link>
                     </>
-                )}
-
-                {isLoggedIn && (
+                ) : (
                     <>
                         <Link href="/profile" className="hover:text-magenta flex items-center transition-colors duration-200 ease-in-out">
                             <AiOutlineUser className="mr-1" /> Profil
