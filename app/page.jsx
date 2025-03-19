@@ -72,13 +72,13 @@ export default function Home() {
             <p className="italic">
               "Depuis que j'utilise cet outil, la gestion des absences est devenue un jeu d'enfant !"
             </p>
-            <p className="font-bold mt-2">- Julie, DRH</p>
+            <p className="font-bold mt-2">- Moussa, DRH</p>
           </div>
           <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-all">
             <p className="italic">
               "Un outil indispensable pour toute équipe qui souhaite gérer les absences efficacement."
             </p>
-            <p className="font-bold mt-2">- Marc, Responsable pédagogique</p>
+            <p className="font-bold mt-2">- Abdoul, Responsable pédagogique</p>
           </div>
         </div>
       </section>
