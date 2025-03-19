@@ -1,40 +1,5 @@
 [
   {
-    "name": "Test2",
-    "date": "2025-03-26",
-    "reason": "absence2"
-  },
-  {
-    "id": 1742193518863,
-    "name": "Test",
-    "date": "2025-03-25",
-    "reason": "absence3"
-  },
-  {
-    "id": 1742330759761,
-    "name": "Moussa Kante",
-    "date": "2025-03-20",
-    "reason": "malade"
-  },
-  {
-    "id": 1742348826460,
-    "name": "garcon",
-    "date": "2025-03-18",
-    "reason": "malade"
-  },
-  {
-    "id": 1742349999556,
-    "name": "Sokhna Faye",
-    "date": "2025-03-20",
-    "reason": "malde"
-  },
-  {
-    "id": 1742350160871,
-    "name": "malick",
-    "date": "2025-03-13",
-    "reason": "conger"
-  },
-  {
     "id": 1742351757812,
     "name": "bobo",
     "email": "bobo2000kante@gmail.com",
@@ -62,6 +27,24 @@
     "id": 1742357932481,
     "name": "abc ",
     "email": "abcd@gmail.com",
+    "role": "user"
+  },
+  {
+    "id": 1742358707748,
+    "name": "Test46",
+    "email": "user46@gmail.com",
+    "role": "user"
+  },
+  {
+    "id": 1742358766211,
+    "name": "Moussa Kante",
+    "email": "bobo2000kante@gmail.com",
+    "role": "user"
+  },
+  {
+    "id": 1742358800547,
+    "name": "Abdoulaye ",
+    "email": "elhadj@gmail.com",
     "role": "user"
   }
 ]
