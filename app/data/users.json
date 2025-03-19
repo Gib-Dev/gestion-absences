@@ -1,38 +1,36 @@
 [
   {
-    "id": 1,
-    "name": "Admin",
-    "email": "admin@gestion.com",
-    "role": "admin"
+    "name": "Test2",
+    "date": "2025-03-26",
+    "reason": "absence2"
   },
   {
-    "id": 1742188019605,
-    "name": "test2",
-    "email": "test@gestion.com",
-    "role": "user"
-  },
-  {
-    "id": 1742193603994,
+    "id": 1742193518863,
     "name": "Test",
-    "email": "email@gmail.com",
-    "role": "user"
+    "date": "2025-03-25",
+    "reason": "absence3"
   },
   {
-    "id": 1742195077481,
-    "name": "test",
-    "email": "test@gestion.com",
-    "role": "user"
+    "id": 1742330759761,
+    "name": "Moussa Kante",
+    "date": "2025-03-20",
+    "reason": "malade"
   },
   {
-    "id": 1742196777714,
-    "name": "Test",
-    "email": "biteyemagib@gmail.com",
-    "role": "user"
+    "id": 1742348826460,
+    "name": "garcon",
+    "date": "2025-03-18",
+    "reason": "malade"
   },
   {
-    "id": 1742197291290,
-    "name": "Test",
-    "email": "email@gmail.com",
-    "role": "user"
+    "id": 1742349999556,
+    "name": "Sokhna Faye",
+    "date": "2025-03-20",
+    "reason": "malde"
+  },
+  {
+    "id": 1742350160871,
+    "name": "malick",
+    "date": "2025-03-13",
+    "reason": "conger"
   }
-]
