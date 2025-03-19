@@ -11,12 +11,12 @@
     "reason": "absence3"
   },
   {
-<<<<<<< HEAD
     "id": 1742196795726,
     "name": "Test",
     "date": "2025-04-04",
     "reason": "absence23"
-=======
+  },
+  {
     "id": 1742330759761,
     "name": "Moussa Kante",
     "date": "2025-03-20",
@@ -39,6 +39,11 @@
     "name": "malick",
     "date": "2025-03-13",
     "reason": "conger"
->>>>>>> dcf93b945d28e986ed4cf81a03d4269db93c7739
+  },
+  {
+    "id": 1742357954235,
+    "name": "abc",
+    "date": "2025-03-28",
+    "reason": "Maladie"
   }
 ]

@@ -30,20 +30,18 @@
     "name": "Test",
     "date": "2025-03-27",
     "reason": "aaa"
-  }
+  },
 
-  
   {
-      "id": 1,
-      "name": "Jean Dupont",
-      "date": "2023-10-01",
-      "reason": "Maladie"
+    "id": 1,
+    "name": "Jean Dupont",
+    "date": "2023-10-01",
+    "reason": "Maladie"
   },
   {
     "id": 2,
     "name": "Marie Curie",
-      "date": "2023-10-02",
-      "reason": "Congé"
+    "date": "2023-10-02",
+    "reason": "Congé"
   }
-  
 ]
