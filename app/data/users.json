@@ -12,12 +12,6 @@
     "role": "user"
   },
   {
-    "id": 1742193603994,
-    "name": "Test",
-    "email": "email@gmail.com",
-    "role": "user"
-  },
-  {
     "id": 1742195077481,
     "name": "test",
     "email": "test@gestion.com",
@@ -30,19 +24,7 @@
     "role": "user"
   },
   {
-    "id": 1742330695499,
-    "name": "Moussa Kante",
-    "email": "moses2000kante@gmail.com",
-    "role": "user"
-  },
-  {
-    "id": 1742330715521,
-    "name": "Moussa Kante",
-    "email": "moses2000kante@gmail.com",
-    "role": "user"
-  },
-  {
-    "id": 1742331317302,
+    "id": 1742343666461,
     "name": "Moussa Kante",
     "email": "moses2000kante@gmail.com",
     "role": "user"

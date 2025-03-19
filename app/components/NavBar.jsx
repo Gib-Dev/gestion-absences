@@ -44,6 +44,10 @@ export default function NavBar() {
                     <AiOutlineHome className="mr-1" /> Accueil
                 </Link>
 
+                <Link href="/statistics" className="hover:text-magenta flex items-center transition-colors duration-200 ease-in-out">
+                    📊 Statistiques
+                </Link>
+
                 {!isLoggedIn && (
                     <>
                         <Link href="/auth/login" className="hover:text-magenta flex items-center transition-colors duration-200 ease-in-out">
