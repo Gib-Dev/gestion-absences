@@ -9,5 +9,23 @@
     "name": "Test",
     "date": "2025-03-25",
     "reason": "absence3"
+  },
+  {
+    "id": 1742263781764,
+    "name": "Amadou",
+    "date": "2025-02-01",
+    "reason": "absence4"
+  },
+  {
+    "id": 1742289208863,
+    "name": "Alwahidyne SOW",
+    "date": "2025-03-17",
+    "reason": "Voyage"
+  },
+  {
+    "id": 1742321100074,
+    "name": "daniel",
+    "date": "2025-02-24",
+    "reason": "Voyage"
   }
 ]
