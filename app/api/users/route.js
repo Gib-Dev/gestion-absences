@@ -1,74 +1,141 @@
 // app/api/users/route.js
 "use server";
 
-import path from "path";
-import { promises as fs } from "fs";
 import { NextResponse } from "next/server";
-
-// Chemin absolu vers le fichier users.json
-const dataFilePath = path.join(process.cwd(), "app", "data", "users.json");
+import prisma from "@/lib/prisma";
 
 export async function GET() {
   try {
-    const fileContent = await fs.readFile(dataFilePath, "utf8");
-    const data = JSON.parse(fileContent);
-    return NextResponse.json(data);
+    const users = await prisma.user.findMany({
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        createdAt: true
+      },
+      orderBy: {
+        createdAt: 'desc'
+      }
+    });
+    
+    return NextResponse.json(users);
   } catch (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    console.error("Database error:", error);
+    return NextResponse.json(
+      { error: "Erreur lors de la récupération des utilisateurs" }, 
+      { status: 500 }
+    );
   }
 }
 
 export async function POST(req) {
   try {
     const body = await req.json();
-    const fileContent = await fs.readFile(dataFilePath, "utf8");
-    const data = JSON.parse(fileContent);
+    
+    // Validate required fields
+    if (!body.name || !body.email) {
+      return NextResponse.json(
+        { error: "Nom et email sont requis" },
+        { status: 400 }
+      );
+    }
 
-    const newUser = {
-      id: Date.now(),
-      name: body.name,
-      email: body.email,
-      role: body.role || "user",
-    };
+    // Check if user already exists
+    const existingUser = await prisma.user.findUnique({
+      where: { email: body.email }
+    });
 
-    data.push(newUser);
-    await fs.writeFile(dataFilePath, JSON.stringify(data, null, 2));
+    if (existingUser) {
+      return NextResponse.json(
+        { error: "Un utilisateur avec cet email existe déjà" },
+        { status: 409 }
+      );
+    }
+
+    // Create new user
+    const newUser = await prisma.user.create({
+      data: {
+        name: body.name,
+        email: body.email,
+        password: body.password || "defaultPassword123", // You might want to hash this
+      },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        createdAt: true
+      }
+    });
 
     return NextResponse.json(newUser, { status: 201 });
   } catch (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    console.error("Database error:", error);
+    return NextResponse.json(
+      { error: "Erreur lors de la création de l'utilisateur" },
+      { status: 500 }
+    );
   }
 }
 
 export async function PUT(req) {
   try {
-    const { id, name, email, role } = await req.json();
-    const fileContent = await fs.readFile(dataFilePath, "utf8");
-    const data = JSON.parse(fileContent);
+    const { id, name, email } = await req.json();
+    
+    if (!id) {
+      return NextResponse.json(
+        { error: "ID de l'utilisateur requis" },
+        { status: 400 }
+      );
+    }
 
-    const updatedData = data.map((user) =>
-      user.id === id ? { ...user, name, email, role } : user
-    );
+    const updatedUser = await prisma.user.update({
+      where: { id: parseInt(id) },
+      data: {
+        name: name,
+        email: email,
+      },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        createdAt: true
+      }
+    });
 
-    await fs.writeFile(dataFilePath, JSON.stringify(updatedData, null, 2));
-
-    return NextResponse.json({ message: "Utilisateur mis à jour" });
+    return NextResponse.json({ 
+      message: "Utilisateur mis à jour",
+      user: updatedUser
+    });
   } catch (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    console.error("Database error:", error);
+    return NextResponse.json(
+      { error: "Erreur lors de la mise à jour de l'utilisateur" },
+      { status: 500 }
+    );
   }
 }
 
 export async function DELETE(req) {
   try {
     const { id } = await req.json();
-    const fileContent = await fs.readFile(dataFilePath, "utf8");
-    const data = JSON.parse(fileContent);
+    
+    if (!id) {
+      return NextResponse.json(
+        { error: "ID de l'utilisateur requis" },
+        { status: 400 }
+      );
+    }
 
-    const filteredData = data.filter((user) => user.id !== id);
-    await fs.writeFile(dataFilePath, JSON.stringify(filteredData, null, 2));
+    await prisma.user.delete({
+      where: { id: parseInt(id) }
+    });
 
     return NextResponse.json({ message: "Utilisateur supprimé" });
   } catch (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    console.error("Database error:", error);
+    return NextResponse.json(
+      { error: "Erreur lors de la suppression de l'utilisateur" },
+      { status: 500 }
+    );
   }
 }

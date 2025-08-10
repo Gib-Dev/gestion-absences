@@ -51,6 +51,20 @@ export default function TableAbsences() {
         }
     };
 
+    const formatDate = (dateString) => {
+        if (!dateString) return "N/A";
+        try {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('fr-FR', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+        } catch (error) {
+            return dateString;
+        }
+    };
+
     return (
         <div className="bg-white p-4 rounded-lg shadow-md">
             <h3 className="font-semibold text-lg mb-2">📌 Liste des absences</h3>
@@ -66,9 +80,9 @@ export default function TableAbsences() {
                 <tbody>
                     {absences?.length > 0 ? (
                         absences.map((absence) => (
-                            <tr key={`${absence.id}-${absence.date}`} className="border-t">
+                            <tr key={absence.id} className="border-t">
                                 <td className="p-2">{absence.name}</td>
-                                <td className="p-2">{absence.date}</td>
+                                <td className="p-2">{formatDate(absence.date)}</td>
                                 <td className="p-2">{absence.reason}</td>
                                 <td className="p-2">
                                     <button

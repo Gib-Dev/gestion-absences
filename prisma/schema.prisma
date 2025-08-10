@@ -14,15 +14,13 @@ model User {
   name      String
   password  String
   createdAt DateTime  @default(now())
-  absences  Absence[]
 }
 
 model Absence {
   id        Int      @id @default(autoincrement())
-  userId    Int
-  reason    String
-  startDate DateTime
-  endDate   DateTime
+  name      String   // Name of the person absent
+  date      DateTime // Date of absence
+  reason    String   // Reason for absence
   createdAt DateTime @default(now())
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  updatedAt DateTime @updatedAt
 }

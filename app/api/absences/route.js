@@ -1,55 +1,79 @@
 // app/api/absences/route.js
 "use server";
 
-import path from "path";
-import { promises as fs } from "fs";
 import { NextResponse } from "next/server";
-
-const dataFilePath = path.join(process.cwd(), "data", "absences.json");
+import prisma from "@/lib/prisma";
 
 export async function GET() {
   try {
-    const fileContent = await fs.readFile(dataFilePath, "utf8");
-    const data = JSON.parse(fileContent);
-    return NextResponse.json(data);
+    const absences = await prisma.absence.findMany({
+      orderBy: {
+        createdAt: 'desc'
+      }
+    });
+    
+    return NextResponse.json(absences);
   } catch (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    console.error("Database error:", error);
+    return NextResponse.json(
+      { error: "Erreur lors de la récupération des absences" }, 
+      { status: 500 }
+    );
   }
 }
 
 export async function POST(req) {
   try {
     const body = await req.json();
-    const fileContent = await fs.readFile(dataFilePath, "utf8");
-    const data = JSON.parse(fileContent);
+    
+    // Validate required fields
+    if (!body.name || !body.date || !body.reason) {
+      return NextResponse.json(
+        { error: "Tous les champs sont requis" },
+        { status: 400 }
+      );
+    }
 
-    const newAbsence = {
-      id: Date.now(),
-      name: body.name,
-      date: body.date,
-      reason: body.reason,
-    };
-
-    data.push(newAbsence);
-    await fs.writeFile(dataFilePath, JSON.stringify(data, null, 2));
+    // Create new absence
+    const newAbsence = await prisma.absence.create({
+      data: {
+        name: body.name,
+        date: new Date(body.date),
+        reason: body.reason,
+      },
+    });
 
     return NextResponse.json(newAbsence, { status: 201 });
   } catch (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    console.error("Database error:", error);
+    return NextResponse.json(
+      { error: "Erreur lors de la création de l'absence" },
+      { status: 500 }
+    );
   }
 }
 
 export async function DELETE(req) {
   try {
     const { id } = await req.json();
-    const fileContent = await fs.readFile(dataFilePath, "utf8");
-    let data = JSON.parse(fileContent);
+    
+    if (!id) {
+      return NextResponse.json(
+        { error: "ID de l'absence requis" },
+        { status: 400 }
+      );
+    }
 
-    data = data.filter((absence) => absence.id !== id);
-    await fs.writeFile(dataFilePath, JSON.stringify(data, null, 2));
+    await prisma.absence.delete({
+      where: { id: parseInt(id) }
+    });
 
     return NextResponse.json({ message: "Absence supprimée avec succès" });
   } catch (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    console.error("Database error:", error);
+    return NextResponse.json(
+      { error: "Erreur lors de la suppression de l'absence" },
+      { status: 500 }
+    );
   }
 }
