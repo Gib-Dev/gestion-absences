@@ -28,6 +28,7 @@ async function main() {
         name: 'Jean Dupont',
         date: new Date('2025-01-15'),
         reason: 'Maladie',
+        userId: user.id, // Associate with the created user
       },
     }),
     prisma.absence.create({
@@ -35,6 +36,7 @@ async function main() {
         name: 'Marie Martin',
         date: new Date('2025-01-16'),
         reason: 'Congé',
+        userId: user.id, // Associate with the created user
       },
     }),
     prisma.absence.create({
@@ -42,6 +44,7 @@ async function main() {
         name: 'Pierre Durand',
         date: new Date('2025-01-17'),
         reason: 'Rendez-vous médical',
+        userId: user.id, // Associate with the created user
       },
     }),
   ])

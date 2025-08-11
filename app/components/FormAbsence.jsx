@@ -45,9 +45,9 @@ const FormAbsence = memo(function FormAbsence() {
             return false;
         }
         
-        // Check if date is not in the future
-        if (isDateInFuture(formData.date)) {
-            toast.error(ERROR_MESSAGES.VALIDATION.DATE_FUTURE);
+        // Check if date is valid (allow future dates for planning)
+        if (!formData.date) {
+            toast.error(ERROR_MESSAGES.VALIDATION.DATE_REQUIRED);
             return false;
         }
         
@@ -97,7 +97,7 @@ const FormAbsence = memo(function FormAbsence() {
                     value={formData.name}
                     onChange={handleInputChange}
                     placeholder={UI_TEXTS.ABSENCES.NAME_PLACEHOLDER}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-magenta focus:border-transparent"
                     disabled={isSubmitting}
                     required
                 />
@@ -114,7 +114,7 @@ const FormAbsence = memo(function FormAbsence() {
                     name="date"
                     value={formData.date}
                     onChange={handleInputChange}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-magenta focus:border-transparent"
                     disabled={isSubmitting}
                     required
                 />
@@ -132,7 +132,7 @@ const FormAbsence = memo(function FormAbsence() {
                     onChange={handleInputChange}
                     placeholder={UI_TEXTS.ABSENCES.REASON_PLACEHOLDER}
                     rows="3"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-magenta focus:border-transparent resize-none"
                     disabled={isSubmitting}
                     required
                 />
@@ -142,7 +142,7 @@ const FormAbsence = memo(function FormAbsence() {
             <button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white px-4 py-2 rounded-md transition-colors duration-200 flex items-center justify-center gap-2"
+                className="w-auto px-6 py-2 bg-magenta text-white rounded-md hover:bg-opacity-90 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
             >
                 {isSubmitting ? (
                     <>

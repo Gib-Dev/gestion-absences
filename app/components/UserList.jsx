@@ -17,15 +17,12 @@ export default function UserList() {
     const fetchUsers = async () => {
         try {
             const res = await fetch("/api/users");
-            console.log("Réponse de l'API :", res); // <-- Ajoutez ce log
-
             if (!res.ok) {
-                const errorText = await res.text(); // <-- Lisez le message d'erreur
+                const errorText = await res.text();
                 throw new Error(`Erreur ${res.status}: ${errorText}`);
             }
 
             const data = await res.json();
-            console.log("Données reçues :", data); // <-- Ajoutez ce log
 
             if (!Array.isArray(data)) throw new Error("Données invalides");
 

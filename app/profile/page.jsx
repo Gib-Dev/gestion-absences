@@ -58,7 +58,7 @@ export default function Profile() {
 
   const handleSave = () => {
     // Here you would typically save the changes to the API
-    console.log("Saving profile changes:", formData);
+    
     setIsEditing(false);
     // You could add a toast notification here
   };

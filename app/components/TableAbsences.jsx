@@ -93,12 +93,12 @@ const TableAbsences = memo(function TableAbsences() {
                         value={searchTerm}
                         onChange={handleSearchChange}
                         placeholder={UI_TEXTS.ABSENCES.SEARCH_PLACEHOLDER}
-                        className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-magenta focus:border-transparent"
                     />
                 </div>
                 <button
                     type="submit"
-                    className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+                    className="px-4 py-2 bg-magenta text-white rounded-md hover:bg-opacity-90 transition-all"
                 >
                     {UI_TEXTS.ABSENCES.SEARCH_BUTTON}
                 </button>

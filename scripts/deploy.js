@@ -4,63 +4,114 @@ const { execSync } = require('child_process');
 const fs = require('fs');
 const path = require('path');
 
-console.log('🚀 Gestion Absences - Deployment Check\n');
+console.log('🚀 Démarrage du processus de déploiement...');
 
-// Check if .env.local exists
-const envPath = path.join(process.cwd(), '.env.local');
-if (!fs.existsSync(envPath)) {
-  console.log('❌ .env.local file not found!');
-  console.log('Please create .env.local with your production environment variables.');
-  console.log('See DEPLOYMENT.md for details.\n');
-  process.exit(1);
-}
-
-// Check if Vercel CLI is installed
-try {
-  execSync('vercel --version', { stdio: 'ignore' });
-  console.log('✅ Vercel CLI is installed');
-} catch (error) {
-  console.log('❌ Vercel CLI not found');
-  console.log('Install it with: npm i -g vercel\n');
-  process.exit(1);
-}
-
-// Check if git repository is clean
-try {
-  const gitStatus = execSync('git status --porcelain', { encoding: 'utf8' });
-  if (gitStatus.trim()) {
-    console.log('⚠️  You have uncommitted changes:');
-    console.log(gitStatus);
-    console.log('Please commit your changes before deploying.\n');
-  } else {
-    console.log('✅ Git repository is clean');
+// Vérification des prérequis
+function checkPrerequisites() {
+  console.log('📋 Vérification des prérequis...');
+  
+  // Vérifier que .env existe
+  if (!fs.existsSync('.env')) {
+    console.error('❌ Fichier .env manquant !');
+    console.log('💡 Copiez env.example vers .env et configurez vos variables');
+    process.exit(1);
   }
-} catch (error) {
-  console.log('❌ Not a git repository or git not available');
-  console.log('Please initialize git and commit your code.\n');
-  process.exit(1);
+  
+  // Vérifier que DATABASE_URL est configuré
+  const envContent = fs.readFileSync('.env', 'utf8');
+  if (!envContent.includes('DATABASE_URL=')) {
+    console.error('❌ DATABASE_URL manquant dans .env !');
+    process.exit(1);
+  }
+  
+  console.log('✅ Prérequis vérifiés');
 }
 
-// Check if build works
-console.log('\n🔨 Testing build...');
-try {
-  execSync('npm run build', { stdio: 'inherit' });
-  console.log('✅ Build successful!\n');
-} catch (error) {
-  console.log('❌ Build failed! Please fix the errors before deploying.\n');
-  process.exit(1);
+// Migration de la base de données
+function migrateDatabase() {
+  console.log('🗄️ Migration de la base de données...');
+  
+  try {
+    // Générer le client Prisma
+    execSync('npx prisma generate', { stdio: 'inherit' });
+    console.log('✅ Client Prisma généré');
+    
+    // Pousser le schéma vers la base
+    execSync('npx prisma db push', { stdio: 'inherit' });
+    console.log('✅ Schéma de base de données mis à jour');
+    
+    // Seed de la base si nécessaire
+    if (process.env.NODE_ENV === 'development') {
+      execSync('npx prisma db seed', { stdio: 'inherit' });
+      console.log('✅ Base de données seedée');
+    }
+    
+  } catch (error) {
+    console.error('❌ Erreur lors de la migration de la base de données:', error.message);
+    process.exit(1);
+  }
 }
 
-// Check Prisma
-console.log('🔍 Checking Prisma setup...');
-try {
-  execSync('npx prisma generate', { stdio: 'inherit' });
-  console.log('✅ Prisma client generated\n');
-} catch (error) {
-  console.log('❌ Prisma setup failed!\n');
-  process.exit(1);
+// Build de l'application
+function buildApplication() {
+  console.log('🏗️ Build de l\'application...');
+  
+  try {
+    execSync('npm run build', { stdio: 'inherit' });
+    console.log('✅ Application buildée avec succès');
+  } catch (error) {
+    console.error('❌ Erreur lors du build:', error.message);
+    process.exit(1);
+  }
 }
 
-console.log('🎉 All checks passed! You can now deploy with:');
-console.log('   vercel\n');
-console.log('Or follow the detailed guide in DEPLOYMENT.md');
+// Tests de linting
+function runLinting() {
+  console.log('🔍 Vérification du code...');
+  
+  try {
+    execSync('npm run lint', { stdio: 'inherit' });
+    console.log('✅ Code vérifié');
+  } catch (error) {
+    console.error('❌ Erreurs de linting détectées:', error.message);
+    console.log('💡 Corrigez les erreurs avant de déployer');
+    process.exit(1);
+  }
+}
+
+// Déploiement
+function deploy() {
+  console.log('🚀 Déploiement...');
+  
+  try {
+    // Déploiement Vercel
+    execSync('vercel --prod', { stdio: 'inherit' });
+    console.log('✅ Déploiement réussi !');
+  } catch (error) {
+    console.error('❌ Erreur lors du déploiement:', error.message);
+    process.exit(1);
+  }
+}
+
+// Fonction principale
+async function main() {
+  try {
+    checkPrerequisites();
+    runLinting();
+    migrateDatabase();
+    buildApplication();
+    deploy();
+    
+    console.log('🎉 Déploiement terminé avec succès !');
+  } catch (error) {
+    console.error('❌ Erreur fatale:', error.message);
+    process.exit(1);
+  }
+}
+
+// Exécution
+if (require.main === module) {
+  main();
+}
+
+module.exports = { main, checkPrerequisites, migrateDatabase, buildApplication, deploy };

@@ -37,9 +37,12 @@ export const isDateInFuture = (dateInput) => {
   try {
     const date = new Date(dateInput);
     const today = new Date();
-    today.setHours(0, 0, 0, 0);
     
-    return date > today;
+    // Reset time to start of day for both dates to compare only dates
+    const dateOnly = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+    const todayOnly = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+    
+    return dateOnly > todayOnly;
   } catch (error) {
     console.error('Date validation error:', error);
     return false;

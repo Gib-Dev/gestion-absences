@@ -88,21 +88,16 @@ export default function RegisterPage() {
     setIsSubmitting(true);
     
     try {
-      console.log("Starting registration...");
       const result = await register(formData.name, formData.email, formData.password);
-      console.log("Registration result:", result);
       
       if (result.success) {
-        console.log("Registration successful, showing toast...");
         toast.success("Compte créé avec succès ! Redirection...");
         // Add a small delay to show the toast before redirecting
         setTimeout(() => {
-          console.log("Redirecting to dashboard...");
           // Use window.location.href for more reliable redirection
           window.location.href = '/dashboard';
         }, 1000);
       } else {
-        console.log("Registration failed:", result.error);
         setIsSubmitting(false);
       }
     } catch (err) {

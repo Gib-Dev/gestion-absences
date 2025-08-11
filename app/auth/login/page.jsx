@@ -47,16 +47,12 @@ export default function LoginPage() {
     setIsSubmitting(true);
     
     try {
-      console.log("Starting login...");
       const result = await login(formData.email, formData.password);
-      console.log("Login result:", result);
       
       if (result.success) {
-        console.log("Login successful, will redirect...");
         // Don't redirect here, let useEffect handle it
         setIsSubmitting(false);
       } else {
-        console.log("Login failed:", result.error);
         setIsSubmitting(false);
       }
     } catch (err) {
@@ -69,7 +65,6 @@ export default function LoginPage() {
   // Handle redirection after successful login
   useEffect(() => {
     if (isAuthenticated && user) {
-      console.log("User authenticated, redirecting to dashboard...");
       router.push('/dashboard');
     }
   }, [isAuthenticated, user, router]);

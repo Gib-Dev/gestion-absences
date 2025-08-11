@@ -131,7 +131,7 @@ This application is optimized for deployment on modern platforms:
 - **Netlify** - Static site deployment
 - **Docker** - Containerized deployment
 
-See [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md) for detailed deployment instructions.
+See [docs/DEPLOYMENT_PRODUCTION.md](docs/DEPLOYMENT_PRODUCTION.md) for detailed production deployment instructions.
 
 ## 🛡️ Security Features
 
