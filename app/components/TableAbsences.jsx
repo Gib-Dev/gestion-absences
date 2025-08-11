@@ -1,11 +1,15 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useCallback, useMemo } from "react";
 import Modal from "react-modal";
 import { FaTrash, FaSearch, FaSpinner, FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import { useAbsences } from "@/hooks/useAbsences";
+import { ERROR_MESSAGES, UI_TEXTS, APP_CONFIG } from "@/constants";
+import { formatDate } from "@/utils/dateUtils";
 
-export default function TableAbsences() {
+import { memo } from "react";
+
+const TableAbsences = memo(function TableAbsences() {
     const [modalIsOpen, setModalIsOpen] = useState(false);
     const [selectedId, setSelectedId] = useState(null);
     const [searchTerm, setSearchTerm] = useState("");
@@ -21,24 +25,28 @@ export default function TableAbsences() {
         clearError
     } = useAbsences();
 
+    // Memoize expensive computations
+    const hasAbsences = useMemo(() => absences.length > 0, [absences.length]);
+    const showPagination = useMemo(() => pagination.pages > 1, [pagination.pages]);
+
     // Initialize Modal
-    useState(() => {
+    useEffect(() => {
         if (typeof window !== "undefined") {
             Modal.setAppElement(document.body);
         }
-    });
+    }, []);
 
-    const openModal = (id) => {
+    const openModal = useCallback((id) => {
         setSelectedId(id);
         setModalIsOpen(true);
-    };
+    }, []);
 
-    const closeModal = () => {
+    const closeModal = useCallback(() => {
         setSelectedId(null);
         setModalIsOpen(false);
-    };
+    }, []);
 
-    const handleDelete = async () => {
+    const handleDelete = useCallback(async () => {
         try {
             const result = await deleteAbsence(selectedId);
             if (result.success) {
@@ -47,37 +55,25 @@ export default function TableAbsences() {
         } catch (err) {
             console.error("Erreur lors de la suppression", err);
         }
-    };
+    }, [selectedId, deleteAbsence, closeModal]);
 
-    const handleSearch = (e) => {
+    const handleSearch = useCallback((e) => {
         e.preventDefault();
         searchAbsences(searchTerm);
-    };
+    }, [searchTerm, searchAbsences]);
 
-    const handleSearchChange = (e) => {
+    const handleSearchChange = useCallback((e) => {
         setSearchTerm(e.target.value);
         if (error) clearError();
-    };
+    }, [error, clearError]);
 
-    const formatDate = (dateString) => {
-        if (!dateString) return "N/A";
-        try {
-            const date = new Date(dateString);
-            return date.toLocaleDateString('fr-FR', {
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric'
-            });
-        } catch (error) {
-            return dateString;
-        }
-    };
+    // Remove the local formatDate function since we're using the utility
 
     if (loading && absences.length === 0) {
         return (
             <div className="flex items-center justify-center py-8">
                 <FaSpinner className="animate-spin text-2xl text-blue-600" />
-                <span className="ml-2 text-gray-600">Chargement des absences...</span>
+                <span className="ml-2 text-gray-600">{UI_TEXTS.ABSENCES.LOADING_ABSENCES}</span>
             </div>
         );
     }
@@ -85,7 +81,7 @@ export default function TableAbsences() {
     return (
         <div className="space-y-4">
             <h3 className="font-semibold text-lg text-gray-800">
-                📌 Liste des absences
+                {UI_TEXTS.ABSENCES.LIST_TITLE}
             </h3>
             
             {/* Search Bar */}
@@ -96,7 +92,7 @@ export default function TableAbsences() {
                         type="text"
                         value={searchTerm}
                         onChange={handleSearchChange}
-                        placeholder="Rechercher par nom ou raison..."
+                        placeholder={UI_TEXTS.ABSENCES.SEARCH_PLACEHOLDER}
                         className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     />
                 </div>
@@ -104,7 +100,7 @@ export default function TableAbsences() {
                     type="submit"
                     className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
                 >
-                    Rechercher
+                    {UI_TEXTS.ABSENCES.SEARCH_BUTTON}
                 </button>
             </form>
 
@@ -127,7 +123,7 @@ export default function TableAbsences() {
                         </tr>
                     </thead>
                     <tbody>
-                        {absences.length > 0 ? (
+                        {hasAbsences ? (
                             absences.map((absence) => (
                                 <tr key={absence.id} className="border-b hover:bg-gray-50">
                                     <td className="px-4 py-3 text-sm text-gray-900">{absence.name}</td>
@@ -137,7 +133,7 @@ export default function TableAbsences() {
                                         <button
                                             onClick={() => openModal(absence.id)}
                                             className="text-red-600 hover:text-red-800 transition-colors"
-                                            title="Supprimer"
+                                            title={UI_TEXTS.ABSENCES.DELETE_TITLE}
                                         >
                                             <FaTrash />
                                         </button>
@@ -147,7 +143,7 @@ export default function TableAbsences() {
                         ) : (
                             <tr>
                                 <td colSpan="4" className="px-4 py-8 text-center text-gray-500">
-                                    {searchTerm ? 'Aucune absence trouvée pour cette recherche.' : 'Aucune absence enregistrée.'}
+                                    {searchTerm ? UI_TEXTS.ABSENCES.NO_SEARCH_RESULTS : UI_TEXTS.ABSENCES.NO_ABSENCES}
                                 </td>
                             </tr>
                         )}
@@ -156,7 +152,7 @@ export default function TableAbsences() {
             </div>
 
             {/* Pagination */}
-            {pagination.pages > 1 && (
+            {showPagination && (
                 <div className="flex items-center justify-between">
                     <div className="text-sm text-gray-700">
                         Page {pagination.page} sur {pagination.pages} ({pagination.total} absences)
@@ -187,16 +183,16 @@ export default function TableAbsences() {
                 className="bg-white p-6 rounded-lg shadow-xl w-96 mx-auto mt-32"
                 overlayClassName="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center"
             >
-                <h2 className="text-lg font-semibold mb-4 text-gray-900">Confirmation de suppression</h2>
+                <h2 className="text-lg font-semibold mb-4 text-gray-900">{UI_TEXTS.ABSENCES.DELETE_CONFIRMATION}</h2>
                 <p className="mb-6 text-gray-600">
-                    Êtes-vous sûr de vouloir supprimer cette absence ? Cette action est irréversible.
+                    {UI_TEXTS.ABSENCES.DELETE_WARNING}
                 </p>
                 <div className="flex justify-end gap-3">
                     <button
                         onClick={closeModal}
                         className="px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
                     >
-                        Annuler
+                        {UI_TEXTS.ABSENCES.CANCEL_BUTTON}
                     </button>
                     <button
                         onClick={handleDelete}
@@ -204,10 +200,12 @@ export default function TableAbsences() {
                         className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 disabled:opacity-50 transition-colors flex items-center gap-2"
                     >
                         {loading ? <FaSpinner className="animate-spin" /> : null}
-                        Supprimer
+                        {UI_TEXTS.ABSENCES.DELETE_BUTTON}
                     </button>
                 </div>
             </Modal>
         </div>
     );
-}
+});
+
+export default TableAbsences;

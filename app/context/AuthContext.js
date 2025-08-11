@@ -1,9 +1,10 @@
 // app/context/AuthContext.js
 "use client";
 
-import { createContext, useContext, useEffect, useState, useCallback } from "react";
+import { createContext, useContext, useEffect, useState, useCallback, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import apiService from "@/lib/api";
+import { APP_CONFIG } from "@/constants";
 
 const AuthContext = createContext();
 
@@ -20,7 +21,7 @@ export const AuthProvider = ({ children }) => {
 
   const initializeAuth = useCallback(async () => {
     try {
-      const token = localStorage.getItem('authToken');
+      const token = localStorage.getItem(APP_CONFIG.AUTH.TOKEN_KEY);
       if (token) {
         // Verify token and get user data
         const userData = await apiService.get('/api/auth/me');
@@ -29,7 +30,7 @@ export const AuthProvider = ({ children }) => {
     } catch (error) {
       console.error('Auth initialization failed:', error);
       // Clear invalid token
-      localStorage.removeItem('authToken');
+      localStorage.removeItem(APP_CONFIG.AUTH.TOKEN_KEY);
     } finally {
       setLoading(false);
     }
@@ -43,7 +44,7 @@ export const AuthProvider = ({ children }) => {
       const response = await apiService.put('/api/auth', { email, password });
       
       // Store token securely
-      localStorage.setItem('authToken', response.token);
+      localStorage.setItem(APP_CONFIG.AUTH.TOKEN_KEY, response.token);
       
       // Update user state
       setUser(response.user);
@@ -68,7 +69,7 @@ export const AuthProvider = ({ children }) => {
       const response = await apiService.post('/api/auth', { name, email, password });
       
       // Store token securely
-      localStorage.setItem('authToken', response.token);
+      localStorage.setItem(APP_CONFIG.AUTH.TOKEN_KEY, response.token);
       
       // Update user state
       setUser(response.user);
@@ -87,7 +88,7 @@ export const AuthProvider = ({ children }) => {
 
   const logout = useCallback(() => {
     // Clear auth data
-    localStorage.removeItem('authToken');
+    localStorage.removeItem(APP_CONFIG.AUTH.TOKEN_KEY);
     setUser(null);
     setError(null);
     
@@ -99,7 +100,7 @@ export const AuthProvider = ({ children }) => {
     setError(null);
   }, []);
 
-  const value = {
+  const value = useMemo(() => ({
     user,
     loading,
     error,
@@ -108,7 +109,7 @@ export const AuthProvider = ({ children }) => {
     logout,
     clearError,
     isAuthenticated: !!user,
-  };
+  }), [user, loading, error, login, register, logout, clearError]);
 
   return (
     <AuthContext.Provider value={value}>

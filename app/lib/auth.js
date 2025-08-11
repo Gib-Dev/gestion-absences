@@ -1,17 +1,18 @@
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 import { z } from 'zod';
+import { APP_CONFIG } from '@/constants';
 
 // Input validation schemas
 export const loginSchema = z.object({
   email: z.string().email('Invalid email format'),
-  password: z.string().min(6, 'Password must be at least 6 characters')
+  password: z.string().min(APP_CONFIG.VALIDATION.PASSWORD_MIN_LENGTH, 'Password must be at least 6 characters')
 });
 
 export const registerSchema = z.object({
-  name: z.string().min(2, 'Name must be at least 2 characters'),
+  name: z.string().min(APP_CONFIG.VALIDATION.NAME_MIN_LENGTH, 'Name must be at least 2 characters'),
   email: z.string().email('Invalid email format'),
-  password: z.string().min(6, 'Password must be at least 6 characters')
+  password: z.string().min(APP_CONFIG.VALIDATION.PASSWORD_MIN_LENGTH, 'Password must be at least 6 characters')
 });
 
 // JWT token management
@@ -21,7 +22,7 @@ export const generateToken = (payload) => {
   }
   
   return jwt.sign(payload, process.env.JWT_SECRET, {
-    expiresIn: process.env.JWT_EXPIRES_IN || '24h',
+    expiresIn: process.env.JWT_EXPIRES_IN || APP_CONFIG.AUTH.TOKEN_EXPIRY,
     issuer: 'gestion-absences',
     audience: 'gestion-absences-users'
   });
@@ -63,3 +64,4 @@ export const authenticateUser = (req) => {
   const token = authHeader.substring(7);
   return verifyToken(token);
 };
+

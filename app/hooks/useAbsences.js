@@ -1,19 +1,20 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import apiService from '@/lib/api';
+import { APP_CONFIG } from '@/constants';
 
 export const useAbsences = () => {
   const [absences, setAbsences] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [pagination, setPagination] = useState({
-    page: 1,
-    limit: 10,
+    page: APP_CONFIG.PAGINATION.DEFAULT_PAGE,
+    limit: APP_CONFIG.PAGINATION.DEFAULT_LIMIT,
     total: 0,
     pages: 0,
   });
 
   // Fetch absences with pagination and search
-  const fetchAbsences = useCallback(async (page = 1, limit = 10, search = '') => {
+  const fetchAbsences = useCallback(async (page = APP_CONFIG.PAGINATION.DEFAULT_PAGE, limit = APP_CONFIG.PAGINATION.DEFAULT_LIMIT, search = '') => {
     try {
       setLoading(true);
       setError(null);
@@ -35,6 +36,14 @@ export const useAbsences = () => {
       setLoading(false);
     }
   }, []);
+
+  // Memoize pagination state to prevent unnecessary re-renders
+  const memoizedPagination = useMemo(() => ({
+    page: pagination.page,
+    limit: pagination.limit,
+    total: pagination.total,
+    pages: pagination.pages,
+  }), [pagination.page, pagination.limit, pagination.total, pagination.pages]);
 
   // Create new absence
   const createAbsence = useCallback(async (absenceData) => {
@@ -100,7 +109,7 @@ export const useAbsences = () => {
     absences,
     loading,
     error,
-    pagination,
+    pagination: memoizedPagination,
     fetchAbsences,
     createAbsence,
     deleteAbsence,
@@ -109,3 +118,4 @@ export const useAbsences = () => {
     clearError,
   };
 };
+

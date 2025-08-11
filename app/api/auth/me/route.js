@@ -28,3 +28,4 @@ export const GET = asyncHandler(async (req) => {
     user: userData,
   });
 });
+

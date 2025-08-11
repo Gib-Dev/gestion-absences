@@ -7,6 +7,7 @@ import NavBar from "@/components/NavBar";
 import FormAbsence from "@/components/FormAbsence";
 import TableAbsences from "@/components/TableAbsences";
 import { FaSpinner } from "react-icons/fa";
+import { UI_TEXTS } from "@/constants";
 
 export default function Dashboard() {
   const { user, loading, isAuthenticated } = useAuth();
@@ -19,14 +20,14 @@ export default function Dashboard() {
   }, [loading, isAuthenticated, router]);
 
   if (loading) {
-    return (
-      <div className="min-h-screen bg-ghostwhite flex items-center justify-center">
-        <div className="text-center">
-          <FaSpinner className="animate-spin text-4xl text-blue-600 mx-auto mb-4" />
-          <p className="text-gray-600">Chargement...</p>
-        </div>
-      </div>
-    );
+            return (
+            <div className="min-h-screen bg-ghostwhite flex items-center justify-center">
+                <div className="text-center">
+                    <FaSpinner className="animate-spin text-4xl text-blue-600 mx-auto mb-4" />
+                    <p className="text-gray-600">{UI_TEXTS.COMMON.LOADING}</p>
+                </div>
+            </div>
+        );
   }
 
   if (!isAuthenticated) {
@@ -41,10 +42,10 @@ export default function Dashboard() {
           {/* Welcome Header */}
           <div className="bg-white rounded-lg shadow-md p-6 mb-6">
             <h1 className="text-2xl font-bold text-gray-800 mb-2">
-              Bienvenue, {user?.name} ! 👋
+              {UI_TEXTS.DASHBOARD.WELCOME}, {user?.name} ! 👋
             </h1>
             <p className="text-gray-600">
-              Gérez vos absences et suivez votre équipe depuis votre tableau de bord.
+              {UI_TEXTS.DASHBOARD.SUBTITLE}
             </p>
           </div>
 

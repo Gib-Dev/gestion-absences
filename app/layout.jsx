@@ -3,6 +3,7 @@ import "./globals.css";
 import { AuthProvider } from "@/context/AuthContext";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { APP_CONFIG } from "@/constants";
 
 export const metadata = {
   title: "Gestion Absences",
@@ -16,8 +17,8 @@ export default function RootLayout({ children }) {
         <AuthProvider>
           {children}
           <ToastContainer
-            position="top-right"
-            autoClose={5000}
+            position={APP_CONFIG.UI.TOAST_POSITION}
+            autoClose={APP_CONFIG.UI.TOAST_AUTO_CLOSE}
             hideProgressBar={false}
             newestOnTop={false}
             closeOnClick

@@ -84,3 +84,4 @@ export const PUT = asyncHandler(async (req) => {
     token,
   });
 });
+

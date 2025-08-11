@@ -1,12 +1,16 @@
 // app/components/FormAbsence.jsx
 "use client";
 
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { toast } from "react-toastify";
 import { FaPlus, FaSpinner } from "react-icons/fa";
 import { useAbsences } from "@/hooks/useAbsences";
+import { ERROR_MESSAGES, UI_TEXTS } from "@/constants";
+import { isDateInFuture } from "@/utils/dateUtils";
 
-export default function FormAbsence() {
+import { memo } from "react";
+
+const FormAbsence = memo(function FormAbsence() {
     const [formData, setFormData] = useState({
         name: "",
         date: "",
@@ -16,7 +20,7 @@ export default function FormAbsence() {
     
     const { createAbsence, error, clearError } = useAbsences();
 
-    const handleInputChange = (e) => {
+    const handleInputChange = useCallback((e) => {
         const { name, value } = e.target;
         setFormData(prev => ({
             ...prev,
@@ -25,34 +29,30 @@ export default function FormAbsence() {
         
         // Clear error when user starts typing
         if (error) clearError();
-    };
+    }, [error, clearError]);
 
-    const validateForm = () => {
+    const validateForm = useCallback(() => {
         if (!formData.name.trim()) {
-            toast.error("Le nom est requis");
+            toast.error(ERROR_MESSAGES.VALIDATION.NAME_REQUIRED);
             return false;
         }
         if (!formData.date) {
-            toast.error("La date est requise");
+            toast.error(ERROR_MESSAGES.VALIDATION.DATE_REQUIRED);
             return false;
         }
         if (!formData.reason.trim()) {
-            toast.error("La raison est requise");
+            toast.error(ERROR_MESSAGES.VALIDATION.REASON_REQUIRED);
             return false;
         }
         
         // Check if date is not in the future
-        const selectedDate = new Date(formData.date);
-        const today = new Date();
-        today.setHours(0, 0, 0, 0);
-        
-        if (selectedDate > today) {
-            toast.error("La date ne peut pas être dans le futur");
+        if (isDateInFuture(formData.date)) {
+            toast.error(ERROR_MESSAGES.VALIDATION.DATE_FUTURE);
             return false;
         }
         
         return true;
-    };
+    }, [formData]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -65,14 +65,14 @@ export default function FormAbsence() {
             const result = await createAbsence(formData);
             
             if (result.success) {
-                toast.success("✅ Absence enregistrée avec succès !");
+                toast.success(ERROR_MESSAGES.SUCCESS.ABSENCE_CREATED);
                 // Reset form
                 setFormData({ name: "", date: "", reason: "" });
             } else {
                 toast.error(`❌ ${result.error}`);
             }
         } catch (err) {
-            toast.error("❌ Erreur lors de l'enregistrement");
+            toast.error(ERROR_MESSAGES.API.CREATE_FAILED);
             console.error("Form submission error:", err);
         } finally {
             setIsSubmitting(false);
@@ -82,13 +82,13 @@ export default function FormAbsence() {
     return (
         <form onSubmit={handleSubmit} className="space-y-4">
             <h3 className="font-semibold text-lg text-gray-800">
-                📋 Ajouter une absence
+                {UI_TEXTS.ABSENCES.TITLE}
             </h3>
             
             {/* Name Input */}
             <div>
                 <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
-                    Nom *
+                    {UI_TEXTS.ABSENCES.NAME_LABEL}
                 </label>
                 <input
                     type="text"
@@ -96,7 +96,7 @@ export default function FormAbsence() {
                     name="name"
                     value={formData.name}
                     onChange={handleInputChange}
-                    placeholder="Nom de la personne"
+                    placeholder={UI_TEXTS.ABSENCES.NAME_PLACEHOLDER}
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     disabled={isSubmitting}
                     required
@@ -106,7 +106,7 @@ export default function FormAbsence() {
             {/* Date Input */}
             <div>
                 <label htmlFor="date" className="block text-sm font-medium text-gray-700 mb-1">
-                    Date *
+                    {UI_TEXTS.ABSENCES.DATE_LABEL}
                 </label>
                 <input
                     type="date"
@@ -123,14 +123,14 @@ export default function FormAbsence() {
             {/* Reason Input */}
             <div>
                 <label htmlFor="reason" className="block text-sm font-medium text-gray-700 mb-1">
-                    Raison *
+                    {UI_TEXTS.ABSENCES.REASON_LABEL}
                 </label>
                 <textarea
                     id="reason"
                     name="reason"
                     value={formData.reason}
                     onChange={handleInputChange}
-                    placeholder="Raison de l'absence"
+                    placeholder={UI_TEXTS.ABSENCES.REASON_PLACEHOLDER}
                     rows="3"
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
                     disabled={isSubmitting}
@@ -147,12 +147,12 @@ export default function FormAbsence() {
                 {isSubmitting ? (
                     <>
                         <FaSpinner className="animate-spin" />
-                        Enregistrement...
+                        {UI_TEXTS.ABSENCES.SAVING}
                     </>
                 ) : (
                     <>
                         <FaPlus />
-                        Ajouter l'absence
+                        {UI_TEXTS.ABSENCES.ADD_BUTTON}
                     </>
                 )}
             </button>
@@ -165,4 +165,6 @@ export default function FormAbsence() {
             )}
         </form>
     );
-}
+});
+
+export default FormAbsence;

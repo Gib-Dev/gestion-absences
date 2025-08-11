@@ -6,15 +6,16 @@ import prisma from "@/lib/prisma";
 import { authenticateUser } from "@/lib/auth";
 import { asyncHandler, ValidationError, NotFoundError } from "@/lib/errors";
 import { z } from "zod";
+import { APP_CONFIG } from "@/constants";
 
 // Validation schemas
 const absenceSchema = z.object({
-  name: z.string().min(1, 'Name is required').max(100, 'Name too long'),
+  name: z.string().min(1, 'Name is required').max(APP_CONFIG.VALIDATION.NAME_MAX_LENGTH, 'Name too long'),
   date: z.string().refine((date) => {
     const parsed = new Date(date);
     return !isNaN(parsed.getTime()) && parsed <= new Date();
   }, 'Date must be valid and not in the future'),
-  reason: z.string().min(1, 'Reason is required').max(500, 'Reason too long'),
+  reason: z.string().min(1, 'Reason is required').max(APP_CONFIG.VALIDATION.REASON_MAX_LENGTH, 'Reason too long'),
 });
 
 const deleteSchema = z.object({
@@ -28,12 +29,12 @@ export const GET = asyncHandler(async (req) => {
   
   // Parse query parameters
   const { searchParams } = new URL(req.url);
-  const page = parseInt(searchParams.get('page')) || 1;
-  const limit = parseInt(searchParams.get('limit')) || 10;
+  const page = parseInt(searchParams.get('page')) || APP_CONFIG.PAGINATION.DEFAULT_PAGE;
+  const limit = parseInt(searchParams.get('limit')) || APP_CONFIG.PAGINATION.DEFAULT_LIMIT;
   const search = searchParams.get('search') || '';
   
   // Validate pagination
-  if (page < 1 || limit < 1 || limit > 100) {
+  if (page < 1 || limit < 1 || limit > APP_CONFIG.PAGINATION.MAX_LIMIT) {
     throw new ValidationError('Invalid pagination parameters');
   }
 
