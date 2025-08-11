@@ -3,11 +3,11 @@
 import { useAuth } from "@/context/AuthContext";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
-import NavBar from "@/components/NavBar";
 import FormAbsence from "@/components/FormAbsence";
 import TableAbsences from "@/components/TableAbsences";
 import { FaSpinner } from "react-icons/fa";
 import { UI_TEXTS } from "@/constants";
+import PageLayout from "@/components/PageLayout";
 
 export default function Dashboard() {
   const { user, loading, isAuthenticated } = useAuth();
@@ -35,8 +35,7 @@ export default function Dashboard() {
   }
 
   return (
-    <>
-      <NavBar />
+    <PageLayout>
       <div className="min-h-screen bg-ghostwhite">
         <div className="container mx-auto p-6">
           {/* Welcome Header */}
@@ -63,6 +62,6 @@ export default function Dashboard() {
           </div>
         </div>
       </div>
-    </>
+    </PageLayout>
   );
 }

@@ -47,10 +47,12 @@ Visit [http://localhost:3000](http://localhost:3000) to see your app!
 
 ## 📚 Documentation
 
+- **[📖 Documentation Index](docs/README.md)** - Complete documentation overview
 - **[🚀 Quick Start Guide](docs/QUICK_START.md)** - Get up and running in 5 minutes
 - **[🚀 Quick Deploy Guide](docs/QUICK_DEPLOY.md)** - Deploy to production in 5 minutes
 - **[📖 Deployment Guide](docs/DEPLOYMENT.md)** - Comprehensive deployment instructions
 - **[🗄️ Database Setup](docs/DATABASE_SETUP.md)** - Database configuration and management
+- **[📊 Project Status](docs/PROJECT_STATUS.md)** - Current development status and achievements
 
 ## 🛠️ Available Scripts
 

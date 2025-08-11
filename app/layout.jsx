@@ -4,6 +4,7 @@ import { AuthProvider } from "@/context/AuthContext";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { APP_CONFIG } from "@/constants";
+import Footer from "@/components/Footer";
 
 export const metadata = {
   title: "Gestion Absences",
@@ -13,9 +14,12 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="fr">
-      <body>
+      <body className="flex flex-col min-h-screen">
         <AuthProvider>
-          {children}
+          <main className="flex-1">
+            {children}
+          </main>
+          <Footer />
           <ToastContainer
             position={APP_CONFIG.UI.TOAST_POSITION}
             autoClose={APP_CONFIG.UI.TOAST_AUTO_CLOSE}

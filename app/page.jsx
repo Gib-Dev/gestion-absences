@@ -1,11 +1,11 @@
 "use client";
 
-import NavBar from "./components/NavBar";
+import Link from "next/link";
+import PageLayout from "./components/PageLayout";
 
 export default function Home() {
   return (
-    <>
-      <NavBar />
+    <PageLayout>
       <div className="min-h-screen bg-ghostwhite text-night">
         {/* En-tête */}
         <header className="bg-white p-6 shadow-sm">
@@ -14,11 +14,11 @@ export default function Home() {
               Simplifiez la gestion des absences avec notre outil intuitif !
             </h1>
             <div>
-              <a href="/auth/register">
+              <Link href="/auth/register">
                 <button className="bg-magenta text-white px-4 py-2 rounded hover:bg-opacity-90 transition-all">
                   Créer un compte
                 </button>
-              </a>
+              </Link>
             </div>
           </div>
         </header>
@@ -33,11 +33,11 @@ export default function Home() {
               <p className="text-lg mb-4">
                 Optimisez votre temps et simplifiez vos processus avec notre solution tout-en-un.
               </p>
-              <a href="/auth/register">
+              <Link href="/auth/register">
                 <button className="bg-magenta text-white px-6 py-3 rounded hover:bg-opacity-90 transition-all">
                   Commencez maintenant
                 </button>
-              </a>
+              </Link>
             </div>
             <div className="md:w-1/2">
               <img
@@ -93,14 +93,14 @@ export default function Home() {
             <h2 className="text-2xl font-bold mb-4">
               Prêt à révolutionner la gestion des absences ?
             </h2>
-            <a href="/auth/register">
+            <Link href="/auth/register">
               <button className="bg-magenta text-white px-6 py-3 rounded hover:bg-opacity-90 transition-all">
                 Créez un compte dès aujourd'hui !
               </button>
-            </a>
+            </Link>
           </div>
         </section>
       </div>
-    </>
+    </PageLayout>
   );
 }

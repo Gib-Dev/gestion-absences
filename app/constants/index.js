@@ -83,4 +83,33 @@ export const UI_TEXTS = {
     WELCOME: 'Bienvenue',
     SUBTITLE: 'Gérez vos absences et suivez votre équipe depuis votre tableau de bord.',
   },
+  FOOTER: {
+    COMPANY_DESCRIPTION: 'Plateforme moderne de gestion des absences pour entreprises et établissements. Simplifiez la gestion de votre équipe avec nos outils intuitifs.',
+    SUPPORT_HOURS: 'Support disponible du lundi au vendredi, 9h-18h',
+    COPYRIGHT: 'Tous droits réservés.',
+    FEATURES: {
+      ABSENCE_MANAGEMENT: 'Gestion des absences',
+      DASHBOARDS: 'Tableaux de bord',
+      ADVANCED_STATS: 'Statistiques avancées',
+      EXPORTABLE_REPORTS: 'Rapports exportables',
+      RESPONSIVE_INTERFACE: 'Interface responsive',
+    },
+    SECTIONS: {
+      COMPANY_INFO: 'Gestion Absences',
+      QUICK_LINKS: 'Liens Rapides',
+      FEATURES: 'Fonctionnalités',
+      CONTACT: 'Contact',
+    },
+    LINKS: {
+      PRIVACY: 'Politique de confidentialité',
+      TERMS: 'Conditions d\'utilisation',
+      HELP: 'Aide',
+    },
+  },
+  NAVIGATION: {
+    ACTIVE_STATE: {
+      BACKGROUND: 'bg-magenta text-white shadow-lg transform scale-105',
+      HOVER: 'hover:text-magenta hover:bg-ghostwhite',
+    },
+  },
 };
