@@ -5,6 +5,7 @@ import { useAuth } from "@/context/AuthContext";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { FaEye, FaEyeSlash, FaSpinner } from "react-icons/fa";
+import { toast } from "react-toastify";
 import PageLayout from "@/components/PageLayout";
 
 export default function LoginPage() {
@@ -15,15 +16,15 @@ export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   
-  const { login, error, clearError, isAuthenticated } = useAuth();
+  const { login, error, clearError, isAuthenticated, user } = useAuth();
   const router = useRouter();
 
-  // Redirect if already authenticated
+  // Show error toast when error changes
   useEffect(() => {
-    if (isAuthenticated) {
-      router.push("/dashboard");
+    if (error) {
+      toast.error(error);
     }
-  }, [isAuthenticated, router]);
+  }, [error]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -46,16 +47,32 @@ export default function LoginPage() {
     setIsSubmitting(true);
     
     try {
+      console.log("Starting login...");
       const result = await login(formData.email, formData.password);
-      if (!result.success) {
-        // Error is already set in the context
+      console.log("Login result:", result);
+      
+      if (result.success) {
+        console.log("Login successful, will redirect...");
+        // Don't redirect here, let useEffect handle it
+        setIsSubmitting(false);
+      } else {
+        console.log("Login failed:", result.error);
         setIsSubmitting(false);
       }
     } catch (err) {
       console.error("Login error:", err);
+      toast.error("Erreur lors de la connexion. Veuillez réessayer.");
       setIsSubmitting(false);
     }
   };
+
+  // Handle redirection after successful login
+  useEffect(() => {
+    if (isAuthenticated && user) {
+      console.log("User authenticated, redirecting to dashboard...");
+      router.push('/dashboard');
+    }
+  }, [isAuthenticated, user, router]);
 
   return (
     <PageLayout showNavbar={false}>

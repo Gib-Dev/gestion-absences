@@ -24,8 +24,20 @@ export const AuthProvider = ({ children }) => {
       const token = localStorage.getItem(APP_CONFIG.AUTH.TOKEN_KEY);
       if (token) {
         // Verify token and get user data
-        const userData = await apiService.get('/api/auth/me');
-        setUser(userData.user);
+        try {
+          const userData = await apiService.get('/api/auth/me');
+          if (userData.success && userData.user) {
+            setUser(userData.user);
+          } else {
+            // Token is invalid, clear it
+            console.log('Invalid token, clearing...');
+            localStorage.removeItem(APP_CONFIG.AUTH.TOKEN_KEY);
+          }
+        } catch (error) {
+          console.log('Token verification failed, clearing...');
+          // Token is invalid, clear it
+          localStorage.removeItem(APP_CONFIG.AUTH.TOKEN_KEY);
+        }
       }
     } catch (error) {
       console.error('Auth initialization failed:', error);
@@ -49,8 +61,7 @@ export const AuthProvider = ({ children }) => {
       // Update user state
       setUser(response.user);
       
-      // Redirect to dashboard
-      router.push('/dashboard');
+      // Don't redirect here - let the component handle it
       
       return { success: true, user: response.user };
     } catch (error) {
@@ -59,7 +70,7 @@ export const AuthProvider = ({ children }) => {
     } finally {
       setLoading(false);
     }
-  }, [router]);
+  }, []);
 
   const register = useCallback(async (name, email, password) => {
     try {
@@ -74,8 +85,7 @@ export const AuthProvider = ({ children }) => {
       // Update user state
       setUser(response.user);
       
-      // Redirect to dashboard
-      router.push('/dashboard');
+      // Don't redirect here - let the component handle it
       
       return { success: true, user: response.user };
     } catch (error) {
@@ -84,7 +94,7 @@ export const AuthProvider = ({ children }) => {
     } finally {
       setLoading(false);
     }
-  }, [router]);
+  }, []);
 
   const logout = useCallback(() => {
     // Clear auth data
@@ -92,9 +102,8 @@ export const AuthProvider = ({ children }) => {
     setUser(null);
     setError(null);
     
-    // Redirect to login
-    router.push('/auth/login');
-  }, [router]);
+    // Don't redirect here - let the component handle it
+  }, []);
 
   const clearError = useCallback(() => {
     setError(null);

@@ -1,4 +1,6 @@
 // Centralized API service layer
+import { APP_CONFIG } from '@/constants';
+
 class ApiService {
   constructor() {
     this.baseUrl = process.env.NEXT_PUBLIC_API_URL || '';
@@ -10,7 +12,7 @@ class ApiService {
   // Get auth token from localStorage
   getAuthToken() {
     if (typeof window === 'undefined') return null;
-    return localStorage.getItem('authToken');
+    return localStorage.getItem(APP_CONFIG.AUTH.TOKEN_KEY);
   }
 
   // Set auth headers
@@ -35,7 +37,16 @@ class ApiService {
       
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
-        throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
+        const errorMessage = errorData.error || errorData.message || `HTTP error! status: ${response.status}`;
+        
+        // If it's an auth error (401), clear the token
+        if (response.status === 401) {
+          if (typeof window !== 'undefined') {
+            localStorage.removeItem('authToken');
+          }
+        }
+        
+        throw new Error(errorMessage);
       }
 
       return await response.json();

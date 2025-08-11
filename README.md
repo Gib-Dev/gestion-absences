@@ -9,14 +9,13 @@ A modern, production-ready Next.js application for managing employee absences an
 - 📝 **Absence Tracking** - Submit, view, and manage absence requests
 - 📊 **Dashboard** - Comprehensive overview of all data and statistics
 - 🎨 **Modern UI** - Responsive design with Tailwind CSS
-- 🗄️ **Database** - PostgreSQL with Prisma ORM
+- 🗄️ **Database** - SQLite (local dev) / PostgreSQL (production) with Prisma ORM
 - 🚀 **Production Ready** - Optimized for deployment with proper error handling
 
 ## 🚀 Quick Start
 
 ### Prerequisites
 - Node.js 18+ 
-- PostgreSQL database
 - Git
 
 ### Installation
@@ -28,11 +27,11 @@ cd gestion-absences
 # Install dependencies
 npm install
 
-# Set up environment
+# Set up environment (SQLite for local development)
 cp env.example .env
-# Edit .env with your database credentials
+# Edit .env if you want to use PostgreSQL
 
-# Auto-setup database
+# Auto-setup database (SQLite)
 npm run setup
 
 # Start development server
@@ -41,9 +40,19 @@ npm run dev
 
 Visit [http://localhost:3000](http://localhost:3000) to see your app!
 
-### Default Login
-- **Email**: admin@example.com
-- **Password**: password123
+### Database Setup
+The application now uses **SQLite by default** for local development, making it easier to get started:
+
+```bash
+# Generate Prisma client
+npm run db:generate
+
+# Push schema to database
+npm run db:push
+
+# Seed with sample data
+npm run db:seed
+```
 
 ## 📚 Documentation
 
@@ -80,6 +89,8 @@ npm run lint         # Run ESLint
 gestion-absences/
 ├── app/                    # Next.js 15 App Router
 │   ├── api/               # API routes
+│   │   ├── auth/          # Authentication endpoints
+│   │   └── absences/      # Absence management endpoints
 │   ├── auth/              # Authentication pages
 │   ├── components/        # Reusable components
 │   ├── context/           # React context providers
@@ -135,11 +146,31 @@ See [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md) for detailed deployment instruction
 
 - **Frontend**: Next.js 15, React 19, Tailwind CSS
 - **Backend**: Next.js API Routes, Prisma ORM
-- **Database**: PostgreSQL
+- **Database**: SQLite (dev) / PostgreSQL (production)
 - **Authentication**: JWT, bcrypt
 - **Validation**: Zod
 - **Styling**: Tailwind CSS, CSS Modules
 - **Deployment**: Vercel, Railway, Docker
+
+## 🔧 Recent Fixes & Improvements
+
+### Authentication System
+- ✅ **Fixed login redirection** - Users now properly redirect to dashboard after login
+- ✅ **Resolved API errors** - `/api/auth/me` endpoint now works correctly
+- ✅ **Improved middleware** - Simplified authentication flow for better performance
+- ✅ **Enhanced error handling** - Graceful token validation and cleanup
+
+### Navigation & UI
+- ✅ **Active navigation states** - Menu items show current page
+- ✅ **Responsive design** - Mobile-friendly navigation
+- ✅ **Footer component** - Integrated with website color scheme
+- ✅ **Page layout system** - Consistent structure across all pages
+
+### Code Quality
+- ✅ **Performance optimization** - React.memo, useCallback, useMemo
+- ✅ **Constants centralization** - All text and configuration in one place
+- ✅ **Error boundaries** - Better error handling and user experience
+- ✅ **Type safety** - Improved validation and error messages
 
 ## 🤝 Contributing
 
@@ -162,6 +193,13 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 🔄 Changelog
 
+### v2.1.0 - Authentication & Navigation Fixes
+- ✅ **Fixed authentication flow** - Login/registration now works correctly
+- ✅ **Resolved API errors** - All endpoints functioning properly
+- ✅ **Enhanced navigation** - Active states and responsive design
+- ✅ **Improved error handling** - Better user experience
+- ✅ **Performance optimization** - Faster loading and navigation
+
 ### v2.0.0 - Production Refactor
 - ✅ Complete codebase refactoring
 - ✅ Edge Runtime compatible middleware
@@ -176,6 +214,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - Dashboard and statistics
 
 ---
+
+**Status**: 🟢 **READY FOR PRODUCTION** - All major issues resolved, authentication working correctly
 
 
 

@@ -5,6 +5,7 @@ import { useAuth } from "@/context/AuthContext";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { FaEye, FaEyeSlash, FaSpinner } from "react-icons/fa";
+import { toast } from "react-toastify";
 import PageLayout from "@/components/PageLayout";
 
 export default function RegisterPage() {
@@ -22,12 +23,12 @@ export default function RegisterPage() {
   const { register, error, clearError, isAuthenticated } = useAuth();
   const router = useRouter();
 
-  // Redirect if already authenticated
+  // Show error toast when error changes
   useEffect(() => {
-    if (isAuthenticated) {
-      router.push("/dashboard");
+    if (error) {
+      toast.error(error);
     }
-  }, [isAuthenticated, router]);
+  }, [error]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -87,13 +88,26 @@ export default function RegisterPage() {
     setIsSubmitting(true);
     
     try {
+      console.log("Starting registration...");
       const result = await register(formData.name, formData.email, formData.password);
-      if (!result.success) {
-        // Error is already set in the context
+      console.log("Registration result:", result);
+      
+      if (result.success) {
+        console.log("Registration successful, showing toast...");
+        toast.success("Compte créé avec succès ! Redirection...");
+        // Add a small delay to show the toast before redirecting
+        setTimeout(() => {
+          console.log("Redirecting to dashboard...");
+          // Use window.location.href for more reliable redirection
+          window.location.href = '/dashboard';
+        }, 1000);
+      } else {
+        console.log("Registration failed:", result.error);
         setIsSubmitting(false);
       }
     } catch (err) {
       console.error("Registration error:", err);
+      toast.error("Erreur lors de l'inscription. Veuillez réessayer.");
       setIsSubmitting(false);
     }
   };

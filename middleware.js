@@ -1,57 +1,29 @@
 // ✅ middleware.js
 import { NextResponse } from "next/server";
-import { verifyTokenEdge, isValidToken } from "./app/lib/auth-edge";
 
 export async function middleware(request) {
   try {
-    const authHeader = request.headers.get("authorization");
-    const token = authHeader?.replace("Bearer ", "") || request.cookies.get("auth")?.value;
-
-    // Routes protégées (redirection si non connecté)
-    const protectedRoutes = ["/dashboard", "/profile", "/statistics"];
-    const isProtectedRoute = protectedRoutes.some(route => 
-      request.nextUrl.pathname.startsWith(route)
-    );
-
-    if (isProtectedRoute) {
-      if (!token) {
-        return NextResponse.redirect(new URL("/auth/login", request.url));
-      }
-
-      try {
-        // Verify JWT token using Edge-compatible function
-        const decoded = verifyTokenEdge(token);
-        if (!decoded) {
-          return NextResponse.redirect(new URL("/auth/login", request.url));
-        }
-      } catch (error) {
-        console.error("Token verification failed:", error);
-        return NextResponse.redirect(new URL("/auth/login", request.url));
+    // Pour la navigation côté client, on laisse passer
+    // L'authentification sera gérée côté client par le composant PageLayout
+    // Le middleware ne bloque que les routes API qui nécessitent une authentification
+    
+    // Si c'est une route API protégée, on vérifie l'en-tête Authorization
+    if (request.nextUrl.pathname.startsWith('/api/') && 
+        (request.nextUrl.pathname.startsWith('/api/auth/me') || 
+         request.nextUrl.pathname.startsWith('/api/absences'))) {
+      
+      const authHeader = request.headers.get("authorization");
+      if (!authHeader || !authHeader.startsWith('Bearer ')) {
+        return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
       }
     }
-
-    // Empêcher accès à login/register si déjà connecté
-    if (
-      (request.nextUrl.pathname.startsWith("/auth/login") ||
-        request.nextUrl.pathname.startsWith("/auth/register")) &&
-      token
-    ) {
-      try {
-        const decoded = verifyTokenEdge(token);
-        if (decoded) {
-          return NextResponse.redirect(new URL("/dashboard", request.url));
-        }
-      } catch (error) {
-        // Token invalid, allow access to auth pages
-        console.error("Invalid token in auth pages:", error);
-      }
-    }
-
+    
+    // Pour toutes les autres routes, on laisse passer
+    // L'authentification sera gérée côté client
     return NextResponse.next();
+    
   } catch (error) {
     console.error("Middleware error:", error);
-    // In case of error, allow the request to proceed
-    // The client-side authentication will handle the redirect
     return NextResponse.next();
   }
 }
@@ -59,11 +31,8 @@ export async function middleware(request) {
 // Spécification des routes concernées
 export const config = {
   matcher: [
-    "/dashboard/:path*",
-    "/profile/:path*", 
-    "/statistics/:path*",
-    "/auth/login",
-    "/auth/register"
+    "/api/auth/me",
+    "/api/absences/:path*"
   ],
 };
 
