@@ -46,4 +46,4 @@ npx prisma db push
 
 ---
 
-**Need help?** See `DEPLOYMENT.md` for detailed instructions.
+**Need help?** See [DEPLOYMENT.md](DEPLOYMENT.md) for detailed instructions.

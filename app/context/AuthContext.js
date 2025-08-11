@@ -1,0 +1,126 @@
+// app/context/AuthContext.js
+"use client";
+
+import { createContext, useContext, useEffect, useState, useCallback } from "react";
+import { useRouter } from "next/navigation";
+import apiService from "@/lib/api";
+
+const AuthContext = createContext();
+
+export const AuthProvider = ({ children }) => {
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const router = useRouter();
+
+  // Initialize auth state on mount
+  useEffect(() => {
+    initializeAuth();
+  }, []);
+
+  const initializeAuth = useCallback(async () => {
+    try {
+      const token = localStorage.getItem('authToken');
+      if (token) {
+        // Verify token and get user data
+        const userData = await apiService.get('/api/auth/me');
+        setUser(userData.user);
+      }
+    } catch (error) {
+      console.error('Auth initialization failed:', error);
+      // Clear invalid token
+      localStorage.removeItem('authToken');
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  const login = useCallback(async (email, password) => {
+    try {
+      setLoading(true);
+      setError(null);
+      
+      const response = await apiService.put('/api/auth', { email, password });
+      
+      // Store token securely
+      localStorage.setItem('authToken', response.token);
+      
+      // Update user state
+      setUser(response.user);
+      
+      // Redirect to dashboard
+      router.push('/dashboard');
+      
+      return { success: true, user: response.user };
+    } catch (error) {
+      setError(error.message);
+      return { success: false, error: error.message };
+    } finally {
+      setLoading(false);
+    }
+  }, [router]);
+
+  const register = useCallback(async (name, email, password) => {
+    try {
+      setLoading(true);
+      setError(null);
+      
+      const response = await apiService.post('/api/auth', { name, email, password });
+      
+      // Store token securely
+      localStorage.setItem('authToken', response.token);
+      
+      // Update user state
+      setUser(response.user);
+      
+      // Redirect to dashboard
+      router.push('/dashboard');
+      
+      return { success: true, user: response.user };
+    } catch (error) {
+      setError(error.message);
+      return { success: false, error: error.message };
+    } finally {
+      setLoading(false);
+    }
+  }, [router]);
+
+  const logout = useCallback(() => {
+    // Clear auth data
+    localStorage.removeItem('authToken');
+    setUser(null);
+    setError(null);
+    
+    // Redirect to login
+    router.push('/auth/login');
+  }, [router]);
+
+  const clearError = useCallback(() => {
+    setError(null);
+  }, []);
+
+  const value = {
+    user,
+    loading,
+    error,
+    login,
+    register,
+    logout,
+    clearError,
+    isAuthenticated: !!user,
+  };
+
+  return (
+    <AuthContext.Provider value={value}>
+      {children}
+    </AuthContext.Provider>
+  );
+};
+
+export const useAuth = () => {
+  const context = useContext(AuthContext);
+  if (!context) {
+    throw new Error('useAuth must be used within an AuthProvider');
+  }
+  return context;
+};

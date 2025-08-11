@@ -1,45 +1,67 @@
 "use client";
 
-import UserList from "../components/UserList";
-import FormAbsence from "../components/FormAbsence";
-import TableAbsences from "../components/TableAbsences";
-import { FaUsers, FaPlusCircle, FaClipboardList } from "react-icons/fa";
+import { useAuth } from "@/context/AuthContext";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
+import NavBar from "@/components/NavBar";
+import FormAbsence from "@/components/FormAbsence";
+import TableAbsences from "@/components/TableAbsences";
+import { FaSpinner } from "react-icons/fa";
 
-export default function DashboardPage() {
+export default function Dashboard() {
+  const { user, loading, isAuthenticated } = useAuth();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!loading && !isAuthenticated) {
+      router.push("/auth/login");
+    }
+  }, [loading, isAuthenticated, router]);
+
+  if (loading) {
     return (
-        <div className="min-h-screen bg-ghostwhite text-night p-6">
-            {/* En-tête */}
-            <header className="bg-magenta text-ghostwhite p-6 rounded-lg shadow-md mb-8">
-                <h1 className="text-2xl font-bold">Tableau de bord</h1>
-                <p className="text-sm">Bienvenue dans votre espace de gestion des absences</p>
-            </header>
-
-            {/* Contenu principal */}
-            <main className="space-y-8">
-                {/* Liste des utilisateurs */}
-                <section className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-all">
-                    <h2 className="text-xl font-semibold text-night flex items-center gap-3 mb-4">
-                        <FaUsers className="text-magenta" /> Liste des utilisateurs
-                    </h2>
-                    <UserList />
-                </section>
-
-                {/* Formulaire d'ajout d'absence */}
-                <section className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-all">
-                    <h2 className="text-xl font-semibold text-night flex items-center gap-3 mb-4">
-                        <FaPlusCircle className="text-magenta" /> Ajouter une absence
-                    </h2>
-                    <FormAbsence />
-                </section>
-
-                {/* Tableau des absences */}
-                <section className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-all">
-                    <h2 className="text-xl font-semibold text-night flex items-center gap-3 mb-4">
-                        <FaClipboardList className="text-magenta" /> Liste des absences
-                    </h2>
-                    <TableAbsences />
-                </section>
-            </main>
+      <div className="min-h-screen bg-ghostwhite flex items-center justify-center">
+        <div className="text-center">
+          <FaSpinner className="animate-spin text-4xl text-blue-600 mx-auto mb-4" />
+          <p className="text-gray-600">Chargement...</p>
         </div>
+      </div>
     );
+  }
+
+  if (!isAuthenticated) {
+    return null; // Will redirect
+  }
+
+  return (
+    <>
+      <NavBar />
+      <div className="min-h-screen bg-ghostwhite">
+        <div className="container mx-auto p-6">
+          {/* Welcome Header */}
+          <div className="bg-white rounded-lg shadow-md p-6 mb-6">
+            <h1 className="text-2xl font-bold text-gray-800 mb-2">
+              Bienvenue, {user?.name} ! 👋
+            </h1>
+            <p className="text-gray-600">
+              Gérez vos absences et suivez votre équipe depuis votre tableau de bord.
+            </p>
+          </div>
+
+          {/* Dashboard Grid */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* Form Section */}
+            <div className="bg-white rounded-lg shadow-md p-6">
+              <FormAbsence />
+            </div>
+
+            {/* Table Section */}
+            <div className="bg-white rounded-lg shadow-md p-6">
+              <TableAbsences />
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
+  );
 }

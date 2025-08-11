@@ -1,112 +1,179 @@
-# gestion-absences
+# 🏢 Gestion Absences - Absence Management System
 
-Application Next.js pour la gestion des absences et des retards.
+A modern, production-ready Next.js application for managing employee absences and attendance tracking.
 
-## Description
+## ✨ Features
 
-Ce projet est une application web développée avec Next.js permettant de :
+- 🔐 **Secure Authentication** - JWT-based user authentication system
+- 👥 **User Management** - User registration, login, and profile management
+- 📝 **Absence Tracking** - Submit, view, and manage absence requests
+- 📊 **Dashboard** - Comprehensive overview of all data and statistics
+- 🎨 **Modern UI** - Responsive design with Tailwind CSS
+- 🗄️ **Database** - PostgreSQL with Prisma ORM
+- 🚀 **Production Ready** - Optimized for deployment with proper error handling
 
-- Gérer les utilisateurs (inscription, connexion)
-- Soumettre des demandes d'absence
-- Visualiser les absences
-- Disposer d'un tableau de bord utilisateur
-- Utiliser une base de données PostgreSQL via Prisma ORM
+## 🚀 Quick Start
 
-## Technologies utilisées
+### Prerequisites
+- Node.js 18+ 
+- PostgreSQL database
+- Git
 
-- Next.js 15
-- React 19
-- Prisma ORM
-- PostgreSQL (via Supabase)
-- Tailwind CSS
-- JWT Authentication
-
-## Installation
-
-1. Cloner le dépôt :
-
+### Installation
 ```bash
+# Clone the repository
 git clone https://github.com/Gib-Dev/gestion-absences.git
 cd gestion-absences
-```
 
-2. Installer les dépendances :
-
-```bash
+# Install dependencies
 npm install
-```
 
-3. Configuration de la base de données :
-
-```bash
-# Copier le fichier d'environnement
+# Set up environment
 cp env.example .env
+# Edit .env with your database credentials
 
-# Éditer .env avec vos informations de base de données
-# DATABASE_URL="postgresql://username:password@localhost:5432/gestion_absences"
-# JWT_SECRET="your-secret-key"
-```
-
-4. Configuration automatique de la base de données :
-
-```bash
+# Auto-setup database
 npm run setup
+
+# Start development server
+npm run dev
 ```
 
-Cette commande va :
-- Générer le client Prisma
-- Pousser le schéma vers la base de données
-- Créer des données d'exemple
-- Migrer les données JSON existantes (si disponibles)
+Visit [http://localhost:3000](http://localhost:3000) to see your app!
 
-## Commandes utiles
+### Default Login
+- **Email**: admin@example.com
+- **Password**: password123
+
+## 📚 Documentation
+
+- **[🚀 Quick Start Guide](docs/QUICK_START.md)** - Get up and running in 5 minutes
+- **[🚀 Quick Deploy Guide](docs/QUICK_DEPLOY.md)** - Deploy to production in 5 minutes
+- **[📖 Deployment Guide](docs/DEPLOYMENT.md)** - Comprehensive deployment instructions
+- **[🗄️ Database Setup](docs/DATABASE_SETUP.md)** - Database configuration and management
+
+## 🛠️ Available Scripts
 
 ```bash
-# Développement
-npm run dev          # Démarrer le serveur de développement
-npm run build        # Construire pour la production
-npm run start        # Démarrer en production
+# Development
+npm run dev          # Start development server
+npm run build        # Build for production
+npm run start        # Start production server
 
-# Base de données
-npm run db:generate  # Générer le client Prisma
-npm run db:push      # Pousser le schéma vers la DB
-npm run db:studio    # Ouvrir Prisma Studio (interface DB)
-npm run db:seed      # Peupler la DB avec des données d'exemple
-npm run db:reset     # Réinitialiser la base de données
-npm run setup        # Configuration complète de la DB
+# Database
+npm run db:generate  # Generate Prisma client
+npm run db:push      # Push schema to database
+npm run db:studio    # Open Prisma Studio
+npm run db:seed      # Seed database with sample data
+npm run db:reset     # Reset database
+npm run setup        # Complete database setup
 
-# Autres
-npm run lint         # Vérifier le code
+# Code Quality
+npm run lint         # Run ESLint
 ```
 
-## Structure de la base de données
+## 🏗️ Project Structure
 
-### Modèle User
-- `id`: Clé primaire auto-incrémentée
-- `email`: Adresse email unique
-- `name`: Nom complet de l'utilisateur
-- `password`: Mot de passe hashé
-- `createdAt`: Date de création du compte
+```
+gestion-absences/
+├── app/                    # Next.js 15 App Router
+│   ├── api/               # API routes
+│   ├── auth/              # Authentication pages
+│   ├── components/        # Reusable components
+│   ├── context/           # React context providers
+│   ├── dashboard/         # Dashboard page
+│   ├── hooks/             # Custom React hooks
+│   ├── lib/               # Utility libraries
+│   ├── profile/           # User profile page
+│   └── statistics/        # Statistics page
+├── docs/                  # Documentation
+├── prisma/                # Database schema and migrations
+├── public/                # Static assets
+└── scripts/               # Utility scripts
+```
 
-### Modèle Absence
-- `id`: Clé primaire auto-incrémentée
-- `name`: Nom de la personne absente
-- `date`: Date de l'absence
-- `reason`: Raison de l'absence
-- `createdAt`: Date de création de l'enregistrement
-- `updatedAt`: Date de dernière modification
+## 🗄️ Database Schema
 
-## Accès par défaut
+### User Model
+- `id` - Primary key
+- `email` - Unique email address
+- `name` - User's full name
+- `password` - Hashed password
+- `createdAt` - Account creation timestamp
 
-Après l'installation, vous pouvez vous connecter avec :
-- **Email**: admin@example.com
-- **Mot de passe**: password123
+### Absence Model
+- `id` - Primary key
+- `name` - Name of absent person
+- `date` - Date of absence
+- `reason` - Reason for absence
+- `createdAt` - Record creation timestamp
+- `updatedAt` - Last update timestamp
 
-## Auteur
+## 🚀 Deployment
 
-Projet réalisé par [Abdoul Magid biteye, Moussa Alanabillah Kante, Thibaut Diatta, el adj Abdoulaye]
+This application is optimized for deployment on modern platforms:
 
-## Support
+- **Vercel** (Recommended) - Zero-config deployment
+- **Railway** - Full-stack deployment
+- **Netlify** - Static site deployment
+- **Docker** - Containerized deployment
 
-Pour plus d'informations sur la configuration de la base de données, consultez [DATABASE_SETUP.md](./DATABASE_SETUP.md).
+See [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md) for detailed deployment instructions.
+
+## 🛡️ Security Features
+
+- JWT-based authentication
+- Password hashing with bcrypt
+- Protected API routes
+- Input validation with Zod
+- CORS protection
+- Environment variable security
+
+## 🎨 Tech Stack
+
+- **Frontend**: Next.js 15, React 19, Tailwind CSS
+- **Backend**: Next.js API Routes, Prisma ORM
+- **Database**: PostgreSQL
+- **Authentication**: JWT, bcrypt
+- **Validation**: Zod
+- **Styling**: Tailwind CSS, CSS Modules
+- **Deployment**: Vercel, Railway, Docker
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🆘 Support
+
+- 📖 Check the [documentation](docs/) first
+- 🐛 Report bugs via GitHub Issues
+- 💬 Ask questions in Discussions
+- 📧 Contact the development team
+
+## 🔄 Changelog
+
+### v2.0.0 - Production Refactor
+- ✅ Complete codebase refactoring
+- ✅ Edge Runtime compatible middleware
+- ✅ Centralized authentication system
+- ✅ Comprehensive error handling
+- ✅ API service layer
+- ✅ Production-ready architecture
+
+### v1.0.0 - Initial Release
+- Basic absence management functionality
+- User authentication system
+- Dashboard and statistics
+
+---
+
+
 

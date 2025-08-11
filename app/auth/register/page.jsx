@@ -1,91 +1,280 @@
-// ✅ app/auth/register/page.jsx
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useAuth } from "@/context/AuthContext";
 import { useRouter } from "next/navigation";
-import { toast } from "react-toastify";
-import { FaUser, FaLock, FaEnvelope } from "react-icons/fa";
+import Link from "next/link";
+import { FaEye, FaEyeSlash, FaSpinner } from "react-icons/fa";
 
 export default function RegisterPage() {
-    const router = useRouter();
-    const [form, setForm] = useState({ name: "", email: "", password: "" });
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+  });
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [validationErrors, setValidationErrors] = useState({});
+  
+  const { register, error, clearError, isAuthenticated } = useAuth();
+  const router = useRouter();
 
-    const handleChange = (e) => {
-        setForm({ ...form, [e.target.name]: e.target.value });
-    };
+  // Redirect if already authenticated
+  useEffect(() => {
+    if (isAuthenticated) {
+      router.push("/dashboard");
+    }
+  }, [isAuthenticated, router]);
 
-    const handleRegister = async (e) => {
-        e.preventDefault();
-        try {
-            const res = await fetch("/api/users", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    name: form.name,
-                    email: form.email,
-                    role: "user",
-                }),
-            });
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+    
+    // Clear validation errors when user types
+    if (validationErrors[name]) {
+      setValidationErrors(prev => ({
+        ...prev,
+        [name]: ""
+      }));
+    }
+    
+    // Clear context error
+    if (error) clearError();
+  };
 
-            if (!res.ok) throw new Error("Erreur lors de l'inscription");
+  const validateForm = () => {
+    const errors = {};
+    
+    if (!formData.name.trim()) {
+      errors.name = "Le nom est requis";
+    } else if (formData.name.trim().length < 2) {
+      errors.name = "Le nom doit contenir au moins 2 caractères";
+    }
+    
+    if (!formData.email) {
+      errors.email = "L'email est requis";
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+      errors.email = "Format d'email invalide";
+    }
+    
+    if (!formData.password) {
+      errors.password = "Le mot de passe est requis";
+    } else if (formData.password.length < 6) {
+      errors.password = "Le mot de passe doit contenir au moins 6 caractères";
+    }
+    
+    if (!formData.confirmPassword) {
+      errors.confirmPassword = "La confirmation du mot de passe est requise";
+    } else if (formData.password !== formData.confirmPassword) {
+      errors.confirmPassword = "Les mots de passe ne correspondent pas";
+    }
+    
+    setValidationErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
 
-            localStorage.setItem("user", JSON.stringify(form));
-            localStorage.setItem("auth", "true");
-            document.cookie = "auth=true; path=/";
-            toast.success("✅ Inscription réussie ! Bienvenue 🎉");
-            router.push("/dashboard");
-        } catch (err) {
-            toast.error("❌ " + err.message);
-        }
-    };
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    
+    if (!validateForm()) return;
+    
+    setIsSubmitting(true);
+    
+    try {
+      const result = await register(formData.name, formData.email, formData.password);
+      if (!result.success) {
+        // Error is already set in the context
+        setIsSubmitting(false);
+      }
+    } catch (err) {
+      console.error("Registration error:", err);
+      setIsSubmitting(false);
+    }
+  };
 
-    return (
-        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-100 to-pink-300 bg-cover bg-center" style={{ backgroundImage: "url('/bg-login.jpg')" }}>
-            <div className="bg-white bg-opacity-30 backdrop-blur-lg rounded-xl p-8 w-full max-w-md shadow-lg">
-                <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">Inscription</h2>
-                <form onSubmit={handleRegister} className="space-y-4">
-                    <div className="relative">
-                        <input
-                            type="text"
-                            name="name"
-                            placeholder="Nom"
-                            value={form.name}
-                            onChange={handleChange}
-                            className="w-full pl-10 pr-4 py-2 border rounded-lg bg-white bg-opacity-70 focus:outline-none focus:ring-2 focus:ring-pink-500"
-                            required
-                        />
-                        <FaUser className="absolute left-3 top-2.5 text-gray-600" />
-                    </div>
-                    <div className="relative">
-                        <input
-                            type="email"
-                            name="email"
-                            placeholder="Email"
-                            value={form.email}
-                            onChange={handleChange}
-                            className="w-full pl-10 pr-4 py-2 border rounded-lg bg-white bg-opacity-70 focus:outline-none focus:ring-2 focus:ring-pink-500"
-                            required
-                        />
-                        <FaEnvelope className="absolute left-3 top-2.5 text-gray-600" />
-                    </div>
-                    <div className="relative">
-                        <input
-                            type="password"
-                            name="password"
-                            placeholder="Mot de passe"
-                            value={form.password}
-                            onChange={handleChange}
-                            className="w-full pl-10 pr-4 py-2 border rounded-lg bg-white bg-opacity-70 focus:outline-none focus:ring-2 focus:ring-pink-500"
-                            required
-                        />
-                        <FaLock className="absolute left-3 top-2.5 text-gray-600" />
-                    </div>
-                    <button type="submit" className="w-full bg-pink-600 hover:bg-pink-700 text-white py-2 rounded-lg font-semibold">S'inscrire</button>
-                </form>
-                <p className="mt-4 text-center text-sm text-gray-700">
-                    Vous avez déjà un compte ? <a href="/auth/login" className="text-pink-700 hover:underline">Se connecter</a>
-                </p>
-            </div>
+  const getFieldError = (fieldName) => {
+    return validationErrors[fieldName] || "";
+  };
+
+  return (
+    <div className="min-h-screen bg-ghostwhite flex items-center justify-center p-4">
+      <div className="bg-white rounded-lg shadow-xl p-8 w-full max-w-md">
+        {/* Header */}
+        <div className="text-center mb-8">
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">
+            Créer un compte
+          </h1>
+          <p className="text-gray-600">
+            Rejoignez-nous pour commencer à gérer vos absences
+          </p>
         </div>
-    );
+
+        {/* Registration Form */}
+        <form onSubmit={handleSubmit} className="space-y-6">
+          {/* Name Input */}
+          <div>
+            <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
+              Nom complet
+            </label>
+            <input
+              type="text"
+              id="name"
+              name="name"
+              value={formData.name}
+              onChange={handleInputChange}
+              placeholder="Votre nom complet"
+              className={`w-full px-4 py-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                getFieldError("name") ? "border-red-300" : "border-gray-300"
+              }`}
+              disabled={isSubmitting}
+              required
+            />
+            {getFieldError("name") && (
+              <p className="text-red-600 text-sm mt-1">{getFieldError("name")}</p>
+            )}
+          </div>
+
+          {/* Email Input */}
+          <div>
+            <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
+              Adresse email
+            </label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              value={formData.email}
+              onChange={handleInputChange}
+              placeholder="votre@email.com"
+              className={`w-full px-4 py-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                getFieldError("email") ? "border-red-300" : "border-gray-300"
+              }`}
+              disabled={isSubmitting}
+              required
+            />
+            {getFieldError("email") && (
+              <p className="text-red-600 text-sm mt-1">{getFieldError("email")}</p>
+            )}
+          </div>
+
+          {/* Password Input */}
+          <div>
+            <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
+              Mot de passe
+            </label>
+            <div className="relative">
+              <input
+                type={showPassword ? "text" : "password"}
+                id="password"
+                name="password"
+                value={formData.password}
+                onChange={handleInputChange}
+                placeholder="Votre mot de passe"
+                className={`w-full px-4 py-3 pr-12 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                  getFieldError("password") ? "border-red-300" : "border-gray-300"
+                }`}
+                disabled={isSubmitting}
+                required
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                disabled={isSubmitting}
+              >
+                {showPassword ? <FaEyeSlash /> : <FaEye />}
+              </button>
+            </div>
+            {getFieldError("password") && (
+              <p className="text-red-600 text-sm mt-1">{getFieldError("password")}</p>
+            )}
+          </div>
+
+          {/* Confirm Password Input */}
+          <div>
+            <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 mb-2">
+              Confirmer le mot de passe
+            </label>
+            <div className="relative">
+              <input
+                type={showConfirmPassword ? "text" : "password"}
+                id="confirmPassword"
+                name="confirmPassword"
+                value={formData.confirmPassword}
+                onChange={handleInputChange}
+                placeholder="Confirmez votre mot de passe"
+                className={`w-full px-4 py-3 pr-12 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
+                  getFieldError("confirmPassword") ? "border-red-300" : "border-gray-300"
+                }`}
+                disabled={isSubmitting}
+                required
+              />
+              <button
+                type="button"
+                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                disabled={isSubmitting}
+              >
+                {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
+              </button>
+            </div>
+            {getFieldError("confirmPassword") && (
+              <p className="text-red-600 text-sm mt-1">{getFieldError("confirmPassword")}</p>
+            )}
+          </div>
+
+          {/* Error Display */}
+          {error && (
+            <div className="text-red-600 text-sm bg-red-50 p-3 rounded-md">
+              {error}
+            </div>
+          )}
+
+          {/* Submit Button */}
+          <button
+            type="submit"
+            disabled={isSubmitting}
+            className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white py-3 px-4 rounded-md transition-colors duration-200 flex items-center justify-center gap-2"
+          >
+            {isSubmitting ? (
+              <>
+                <FaSpinner className="animate-spin" />
+                Création du compte...
+              </>
+            ) : (
+              "Créer un compte"
+            )}
+          </button>
+        </form>
+
+        {/* Footer Links */}
+        <div className="mt-6 text-center">
+          <p className="text-gray-600">
+            Déjà un compte ?{" "}
+            <Link 
+              href="/auth/login"
+              className="text-blue-600 hover:text-blue-700 font-medium"
+            >
+              Se connecter
+            </Link>
+          </p>
+        </div>
+
+        {/* Back to Home */}
+        <div className="mt-4 text-center">
+          <Link 
+            href="/"
+            className="text-gray-500 hover:text-gray-700 text-sm"
+          >
+            ← Retour à l'accueil
+          </Link>
+        </div>
+      </div>
+    </div>
+  );
 }

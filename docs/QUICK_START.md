@@ -53,8 +53,8 @@ Navigate to [http://localhost:3000](http://localhost:3000)
 
 ## Need Help?
 
-- Check [DATABASE_SETUP.md](./DATABASE_SETUP.md) for detailed database configuration
-- Review [README.md](./README.md) for full project documentation
+- Check [DATABASE_SETUP.md](DATABASE_SETUP.md) for detailed database configuration
+- Review [README.md](../README.md) for full project documentation
 - Open an issue on GitHub for bugs or questions
 
 ## Common Issues

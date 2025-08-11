@@ -3,26 +3,39 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
-import { AiOutlineHome, AiOutlineUser, AiOutlineLogin, AiOutlineLogout, AiOutlineUserAdd } from "react-icons/ai";
-import { BiBarChart } from "react-icons/bi"; // Icône pour Statistiques
+import { useAuth } from "@/context/AuthContext";
+import { AiOutlineHome, AiOutlineUser, AiOutlineLogin, AiOutlineLogout, AiOutlineUserAdd, AiOutlineDashboard } from "react-icons/ai";
+import { BiBarChart } from "react-icons/bi";
+import { FaSpinner } from "react-icons/fa";
 
 export default function NavBar() {
     const router = useRouter();
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const { user, isAuthenticated, logout, loading } = useAuth();
 
-    useEffect(() => {
-        const auth = localStorage.getItem("auth");
-        setIsLoggedIn(!!auth);
-    }, []);
-
-    const handleLogout = () => {
-        localStorage.removeItem("auth");
-        localStorage.removeItem("user");
-        document.cookie = "auth=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-        setIsLoggedIn(false);
-        router.push("/auth/login");
+    const handleLogout = async () => {
+        try {
+            await logout();
+            router.push("/");
+        } catch (error) {
+            console.error("Logout error:", error);
+        }
     };
+
+    // Show loading spinner while authentication state is being determined
+    if (loading) {
+        return (
+            <nav className="bg-white text-night p-4 flex justify-between items-center shadow-md">
+                <div className="flex items-center">
+                    <div className="w-10 h-10 bg-gray-200 rounded-full animate-pulse"></div>
+                    <div className="ml-3 w-24 h-6 bg-gray-200 rounded animate-pulse"></div>
+                </div>
+                <div className="flex items-center space-x-4">
+                    <div className="w-20 h-6 bg-gray-200 rounded animate-pulse"></div>
+                    <div className="w-20 h-6 bg-gray-200 rounded animate-pulse"></div>
+                </div>
+            </nav>
+        );
+    }
 
     return (
         <nav className="bg-white text-night p-4 flex justify-between items-center shadow-md">
@@ -44,14 +57,21 @@ export default function NavBar() {
                     <AiOutlineHome className="mr-1" /> Accueil
                 </Link>
 
-                {/* Afficher Statistiques SEULEMENT SI l'utilisateur est connecté */}
-                {isLoggedIn && (
+                {/* Dashboard link for authenticated users */}
+                {isAuthenticated && (
+                    <Link href="/dashboard" className="hover:text-magenta flex items-center transition-colors duration-200 ease-in-out">
+                        <AiOutlineDashboard className="mr-1" /> Tableau de bord
+                    </Link>
+                )}
+
+                {/* Statistics link for authenticated users */}
+                {isAuthenticated && (
                     <Link href="/statistics" className="hover:text-magenta flex items-center transition-colors duration-200 ease-in-out">
                         <BiBarChart className="mr-1" /> Statistiques
                     </Link>
                 )}
 
-                {!isLoggedIn ? (
+                {!isAuthenticated ? (
                     <>
                         <Link href="/auth/login" className="hover:text-magenta flex items-center transition-colors duration-200 ease-in-out">
                             <AiOutlineLogin className="mr-1" /> Connexion
@@ -62,15 +82,22 @@ export default function NavBar() {
                     </>
                 ) : (
                     <>
-                        <Link href="/profile" className="hover:text-magenta flex items-center transition-colors duration-200 ease-in-out">
-                            <AiOutlineUser className="mr-1" /> Profil
-                        </Link>
-                        <button
-                            onClick={handleLogout}
-                            className="text-red-400 hover:text-red-600 flex items-center transition-colors duration-200 ease-in-out"
-                        >
-                            <AiOutlineLogout className="mr-1" /> Déconnexion
-                        </button>
+                        {/* User info and profile */}
+                        <div className="flex items-center space-x-4">
+                            <div className="text-sm text-gray-600">
+                                <span className="font-medium">Bonjour, </span>
+                                <span className="text-magenta">{user?.name || 'Utilisateur'}</span>
+                            </div>
+                            <Link href="/profile" className="hover:text-magenta flex items-center transition-colors duration-200 ease-in-out">
+                                <AiOutlineUser className="mr-1" /> Profil
+                            </Link>
+                            <button
+                                onClick={handleLogout}
+                                className="text-red-400 hover:text-red-600 flex items-center transition-colors duration-200 ease-in-out"
+                            >
+                                <AiOutlineLogout className="mr-1" /> Déconnexion
+                            </button>
+                        </div>
                     </>
                 )}
             </div>
