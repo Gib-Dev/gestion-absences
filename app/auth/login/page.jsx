@@ -174,7 +174,7 @@ export default function LoginPage() {
               href="/"
               className="text-gray-500 hover:text-gray-700 text-sm"
             >
-              ← Retour à l'accueil
+              ← Retour à l&apos;accueil
             </Link>
           </div>
         </div>

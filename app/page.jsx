@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import PageLayout from "./components/PageLayout";
 
 export default function Home() {
@@ -40,9 +41,11 @@ export default function Home() {
               </Link>
             </div>
             <div className="md:w-1/2">
-              <img
+              <Image
                 src="/images/banc.jpg"
                 alt="Gestion des absences"
+                width={600}
+                height={400}
                 className="rounded-lg shadow-lg w-full h-auto"
               />
             </div>
@@ -55,7 +58,7 @@ export default function Home() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-all">
               <h3 className="text-xl font-bold mb-2">Tableau de bord intuitif</h3>
-              <p>Obtenez une vue d'ensemble des absences en un clin d'œil.</p>
+              <p>Obtenez une vue d&apos;ensemble des absences en un clin d&apos;œil.</p>
             </div>
             <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-all">
               <h3 className="text-xl font-bold mb-2">Notifications automatiques</h3>
@@ -74,13 +77,13 @@ export default function Home() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-all">
               <p className="italic">
-                "Depuis que j'utilise cet outil, la gestion des absences est devenue un jeu d'enfant !"
+                &quot;Depuis que j&apos;utilise cet outil, la gestion des absences est devenue un jeu d&apos;enfant !&quot;
               </p>
               <p className="font-bold mt-2">- Moussa, DRH</p>
             </div>
             <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-all">
               <p className="italic">
-                "Un outil indispensable pour toute équipe qui souhaite gérer les absences efficacement."
+                &quot;Un outil indispensable pour toute équipe qui souhaite gérer les absences efficacement.&quot;
               </p>
               <p className="font-bold mt-2">- Abdoul, Responsable pédagogique</p>
             </div>
@@ -95,7 +98,7 @@ export default function Home() {
             </h2>
             <Link href="/auth/register">
               <button className="bg-magenta text-white px-6 py-3 rounded hover:bg-opacity-90 transition-all">
-                Créez un compte dès aujourd'hui !
+                Créez un compte dès aujourd&apos;hui !
               </button>
             </Link>
           </div>

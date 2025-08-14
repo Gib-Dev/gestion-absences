@@ -30,11 +30,9 @@ export const AuthProvider = ({ children }) => {
             setUser(userData.user);
           } else {
             // Token is invalid, clear it
-            console.log('Invalid token, clearing...');
             localStorage.removeItem(APP_CONFIG.AUTH.TOKEN_KEY);
           }
         } catch (error) {
-          console.log('Token verification failed, clearing...');
           // Token is invalid, clear it
           localStorage.removeItem(APP_CONFIG.AUTH.TOKEN_KEY);
         }
