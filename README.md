@@ -174,11 +174,24 @@ See [docs/DEPLOYMENT_PRODUCTION.md](docs/DEPLOYMENT_PRODUCTION.md) for detailed 
 
 ## 🤝 Contributing
 
+We welcome contributions! Please read our [Contributing Guidelines](CONTRIBUTING.md) before submitting any changes.
+
+### Quick Start for Contributors:
 1. Fork the repository
 2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+3. Follow our [code standards](CONTRIBUTING.md#code-standards)
+4. Test your changes thoroughly
+5. Commit using [conventional commits](CONTRIBUTING.md#commit-message-format)
+6. Push to your fork and create a Pull Request
+
+### 🛡️ Repository Protection
+Our repository is protected with:
+- ✅ **Branch protection rules** - Main branch is protected
+- ✅ **CI/CD pipeline** - Automated testing and quality checks
+- ✅ **Pull request templates** - Structured review process
+- ✅ **Issue templates** - Standardized bug reports and feature requests
+
+See [docs/GITHUB_PROTECTION_SETUP.md](docs/GITHUB_PROTECTION_SETUP.md) for detailed information.
 
 ## 📄 License
 
