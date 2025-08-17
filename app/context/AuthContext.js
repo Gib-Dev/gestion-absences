@@ -14,11 +14,6 @@ export const AuthProvider = ({ children }) => {
   const [error, setError] = useState(null);
   const router = useRouter();
 
-  // Initialize auth state on mount
-  useEffect(() => {
-    initializeAuth();
-  }, []);
-
   const initializeAuth = useCallback(async () => {
     try {
       const token = localStorage.getItem(APP_CONFIG.AUTH.TOKEN_KEY);
@@ -45,6 +40,11 @@ export const AuthProvider = ({ children }) => {
       setLoading(false);
     }
   }, []);
+
+  // Initialize auth state on mount
+  useEffect(() => {
+    initializeAuth();
+  }, [initializeAuth]);
 
   const login = useCallback(async (email, password) => {
     try {
