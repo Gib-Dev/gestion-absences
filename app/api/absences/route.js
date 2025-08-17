@@ -141,7 +141,7 @@ export async function POST(req) {
         name,
         date: new Date(date),
         reason,
-        userId: user.id, // Maintenant que la DB est mise à jour
+        userId: user.id,
       },
       select: {
         id: true,
@@ -160,6 +160,82 @@ export async function POST(req) {
     }, { status: 201 });
   } catch (error) {
     console.error('Error in POST /api/absences:', error);
+    
+    if (error.message.includes('authorization') || error.message.includes('token')) {
+      return NextResponse.json({
+        success: false,
+        error: 'Unauthorized'
+      }, { status: 401 });
+    }
+    
+    return NextResponse.json({
+      success: false,
+      error: 'Internal server error',
+      message: process.env.NODE_ENV === 'development' ? error.message : 'Something went wrong'
+    }, { status: 500 });
+  }
+}
+
+// Update absence
+export async function PUT(req) {
+  try {
+    // Authenticate user
+    const user = authenticateUser(req);
+    
+    const body = await req.json();
+    
+    // Validate input
+    const validationResult = absenceSchema.extend({
+      id: z.number().int().positive('Invalid ID'),
+    }).safeParse(body);
+    
+    if (!validationResult.success) {
+      return NextResponse.json({
+        success: false,
+        error: 'Invalid input data',
+        details: validationResult.error.errors
+      }, { status: 400 });
+    }
+
+    const { id, name, date, reason } = validationResult.data;
+
+    // Check if absence exists and belongs to user
+    const existingAbsence = await prisma.absence.findFirst({
+      where: { id, userId: user.id },
+    });
+
+    if (!existingAbsence) {
+      return NextResponse.json({
+        success: false,
+        error: 'Absence not found or access denied'
+      }, { status: 404 });
+    }
+
+    // Update absence
+    const updatedAbsence = await prisma.absence.update({
+      where: { id },
+      data: {
+        name,
+        date: new Date(date),
+        reason,
+      },
+      select: {
+        id: true,
+        name: true,
+        date: true,
+        reason: true,
+        createdAt: true,
+        updatedAt: true,
+      },
+    });
+
+    return NextResponse.json({
+      success: true,
+      message: 'Absence updated successfully',
+      absence: updatedAbsence,
+    });
+  } catch (error) {
+    console.error('Error in PUT /api/absences:', error);
     
     if (error.message.includes('authorization') || error.message.includes('token')) {
       return NextResponse.json({
@@ -196,26 +272,17 @@ export async function DELETE(req) {
 
     const { id } = validationResult.data;
 
-    // Check if absence exists and user has permission
-    const absence = await prisma.absence.findUnique({
-      where: { id },
-      select: { userId: true },
+    // Check if absence exists and belongs to user
+    const existingAbsence = await prisma.absence.findFirst({
+      where: { id, userId: user.id },
     });
 
-    if (!absence) {
+    if (!existingAbsence) {
       return NextResponse.json({
         success: false,
-        error: 'Absence not found'
+        error: 'Absence not found or access denied'
       }, { status: 404 });
     }
-
-    // Optional: Check if user owns the absence or is admin
-    // if (absence.userId !== user.id && user.role !== 'ADMIN') {
-    //   return NextResponse.json({
-    //     success: false,
-    //     error: 'You can only delete your own absences'
-    //   }, { status: 403 });
-    // }
 
     // Delete absence
     await prisma.absence.delete({
