@@ -10,7 +10,7 @@ const absenceSchema = z.object({
   name: z.string().min(1, 'Name is required').max(APP_CONFIG.VALIDATION.NAME_MAX_LENGTH, 'Name too long'),
   date: z.string().refine((date) => {
     const parsed = new Date(date);
-    return !isNaN(parsed.getTime()); // ✅ Permet toutes les dates valides (passées et futures)
+    return !isNaN(parsed.getTime());
   }, 'Date must be valid'),
   reason: z.string().min(1, 'Reason is required').max(APP_CONFIG.VALIDATION.REASON_MAX_LENGTH, 'Reason too long'),
 });
