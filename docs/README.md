@@ -15,17 +15,10 @@ Welcome to the Gestion Absences documentation! This guide will help you understa
 ## 🔧 **Development & Architecture**
 
 ### **Code Quality & Best Practices**
-- **[⚡ Next.js Best Practices](NEXTJS_BEST_PRACTICES.md)** - App Router patterns and optimizations
-- **[🎨 CSS Display Properties Guide](CSS_DISPLAY_PROPERTIES_GUIDE.md)** - CSS best practices and common mistakes
-
-### **Refactoring & Improvements**
-- **[🔄 Refactoring Changes](REFACTORING_CHANGES.md)** - Complete refactoring documentation
-- **[🧭 Navigation & Footer Improvements](NAVIGATION_FOOTER_IMPROVEMENTS.md)** - UI/UX enhancements
-- **[🔐 Authentication Pages Improvements](AUTH_PAGES_IMPROVEMENTS.md)** - Auth system enhancements
+- **[🛡️ GitHub Protection Setup](GITHUB_PROTECTION_SETUP.md)** - Repository security configuration
 
 ### **Bug Fixes & Technical Issues**
-- **[🚨 Syntax Error Fixes](SYNTAX_ERROR_FIXES.md)** - Authentication pages syntax fixes
-- **[💧 Hydration Fixes Summary](HYDRATION_FIXES_SUMMARY.md)** - Next.js hydration issues resolved
+- **[🔐 Registration API Fix](REGISTRATION_API_FIX.md)** - Authentication API fixes
 
 ## 📋 **Documentation Structure**
 
@@ -36,13 +29,8 @@ docs/
 ├── QUICK_DEPLOY.md                     # Quick deployment guide
 ├── DEPLOYMENT.md                       # Comprehensive deployment
 ├── DATABASE_SETUP.md                   # Database configuration
-├── NEXTJS_BEST_PRACTICES.md            # Next.js best practices
-├── CSS_DISPLAY_PROPERTIES_GUIDE.md     # CSS best practices
-├── REFACTORING_CHANGES.md              # Refactoring documentation
-├── NAVIGATION_FOOTER_IMPROVEMENTS.md   # UI/UX improvements
-├── AUTH_PAGES_IMPROVEMENTS.md          # Authentication enhancements
-├── SYNTAX_ERROR_FIXES.md               # Bug fixes
-└── HYDRATION_FIXES_SUMMARY.md          # Technical issue resolution
+├── GITHUB_PROTECTION_SETUP.md          # Repository security configuration
+└── REGISTRATION_API_FIX.md             # Authentication API fixes
 ```
 
 ## 🎯 **Quick Reference**
@@ -58,9 +46,8 @@ docs/
 3. Follow **[Database Setup](DATABASE_SETUP.md)** for database configuration
 
 ### **For Code Quality**
-1. Review **[Refactoring Changes](REFACTORING_CHANGES.md)**
-2. Follow **[Next.js Best Practices](NEXTJS_BEST_PRACTICES.md)**
-3. Apply **[CSS Display Properties Guide](CSS_DISPLAY_PROPERTIES_GUIDE.md)**
+1. Review **[GitHub Protection Setup](GITHUB_PROTECTION_SETUP.md)**
+2. Follow **[Registration API Fix](REGISTRATION_API_FIX.md)** for authentication patterns
 
 ## 🔍 **Search Documentation**
 
@@ -93,5 +80,5 @@ When adding new documentation:
 ---
 
 **Last Updated**: January 2025  
-**Version**: 2.0.0  
+**Version**: 2.2.0  
 **Status**: Production Ready ✅

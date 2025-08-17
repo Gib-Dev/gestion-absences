@@ -1,7 +1,7 @@
 // app/api/absences/route.js
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
-import { verifyTokenEdge } from "@/lib/auth-edge";
+import { verifyToken } from "@/lib/auth";
 import { z } from "zod";
 import { APP_CONFIG } from "@/constants";
 
@@ -30,7 +30,7 @@ function authenticateUser(req) {
   const token = authHeader.substring(7);
   
   try {
-    const decoded = verifyTokenEdge(token);
+    const decoded = verifyToken(token);
     if (!decoded) {
       throw new Error('Invalid token');
     }
