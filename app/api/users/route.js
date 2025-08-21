@@ -2,21 +2,16 @@
 "use server";
 
 import { NextResponse } from "next/server";
-import prisma from "@/lib/prisma";
+import { supabase } from "@/lib/supabase";
 
 export async function GET() {
   try {
-    const users = await prisma.user.findMany({
-      select: {
-        id: true,
-        name: true,
-        email: true,
-        createdAt: true
-      },
-      orderBy: {
-        createdAt: 'desc'
-      }
-    });
+    const { data: users, error } = await supabase
+      .from('User')
+      .select('id, name, email, createdAt')
+      .order('createdAt', { ascending: false });
+    
+    if (error) throw error;
     
     return NextResponse.json(users);
   } catch (error) {
@@ -41,9 +36,15 @@ export async function POST(req) {
     }
 
     // Check if user already exists
-    const existingUser = await prisma.user.findUnique({
-      where: { email: body.email }
-    });
+    const { data: existingUser, error: findError } = await supabase
+      .from('User')
+      .select('*')
+      .eq('email', body.email)
+      .single();
+
+    if (findError && findError.code !== 'PGRST116') {
+      throw findError;
+    }
 
     if (existingUser) {
       return NextResponse.json(
@@ -53,19 +54,17 @@ export async function POST(req) {
     }
 
     // Create new user
-    const newUser = await prisma.user.create({
-      data: {
+    const { data: newUser, error: createError } = await supabase
+      .from('User')
+      .insert({
         name: body.name,
         email: body.email,
-        password: body.password || "defaultPassword123", // You might want to hash this
-      },
-      select: {
-        id: true,
-        name: true,
-        email: true,
-        createdAt: true
-      }
-    });
+        password: body.password || "defaultPassword123",
+      })
+      .select('id, name, email, createdAt')
+      .single();
+
+    if (createError) throw createError;
 
     return NextResponse.json(newUser, { status: 201 });
   } catch (error) {
@@ -88,19 +87,14 @@ export async function PUT(req) {
       );
     }
 
-    const updatedUser = await prisma.user.update({
-      where: { id: parseInt(id) },
-      data: {
-        name: name,
-        email: email,
-      },
-      select: {
-        id: true,
-        name: true,
-        email: true,
-        createdAt: true
-      }
-    });
+    const { data: updatedUser, error } = await supabase
+      .from('User')
+      .update({ name, email })
+      .eq('id', id)
+      .select('id, name, email, createdAt')
+      .single();
+
+    if (error) throw error;
 
     return NextResponse.json({ 
       message: "Utilisateur mis à jour",
@@ -126,9 +120,12 @@ export async function DELETE(req) {
       );
     }
 
-    await prisma.user.delete({
-      where: { id: parseInt(id) }
-    });
+    const { error } = await supabase
+      .from('User')
+      .delete()
+      .eq('id', id);
+
+    if (error) throw error;
 
     return NextResponse.json({ message: "Utilisateur supprimé" });
   } catch (error) {

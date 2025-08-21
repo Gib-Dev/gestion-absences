@@ -1,9 +1,9 @@
-# 🚀 Quick Start Guide
+# Quick Start Guide
 
 ## Prerequisites
 
 - Node.js 18+ installed
-- PostgreSQL database running
+- Supabase account
 - Git installed
 
 ## 5-Minute Setup
@@ -15,20 +15,22 @@ cd gestion-absences
 npm install
 ```
 
-### 2. Database Setup
+### 2. Supabase Setup
 ```bash
 # Copy environment file
-cp env.example .env
+cp env.local.example .env.local
 
-# Edit .env with your database details
-# DATABASE_URL="postgresql://username:password@localhost:5432/gestion_absences"
-# JWT_SECRET="your-secret-key-here"
+# Edit .env.local with your Supabase credentials
+# NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
+# NEXT_PUBLIC_SUPABASE_ANON_KEY=your-supabase-anon-key
+# JWT_SECRET=your-secret-key-here
 ```
 
-### 3. Auto-Setup Database
-```bash
-npm run setup
-```
+### 3. Create Supabase Project
+1. Go to [supabase.com](https://supabase.com)
+2. Create a new project
+3. Copy your Project URL and anon key
+4. Update `.env.local` with these values
 
 ### 4. Start Development Server
 ```bash
@@ -39,35 +41,35 @@ npm run dev
 Navigate to [http://localhost:3000](http://localhost:3000)
 
 ## Default Login
-- **Email**: admin@example.com
+- **Email**: test@example.com
 - **Password**: password123
 
 ## What's Included
 
-✅ **User Management**: Register, login, profile management  
-✅ **Absence Tracking**: Add, view, delete absences  
-✅ **Dashboard**: Overview of all data  
-✅ **Responsive Design**: Works on all devices  
-✅ **Database**: PostgreSQL with Prisma ORM  
-✅ **Authentication**: JWT-based security  
+**User Management**: Register, login, profile management  
+**Absence Tracking**: Add, view, delete absences  
+**Dashboard**: Overview of all data  
+**Responsive Design**: Works on all devices  
+**Database**: PostgreSQL with Supabase  
+**Authentication**: JWT-based security  
 
 ## Need Help?
 
-- Check [DATABASE_SETUP.md](DATABASE_SETUP.md) for detailed database configuration
+- Check [DATABASE_SETUP.md](DATABASE_SETUP.md) for detailed Supabase configuration
 - Review [README.md](../README.md) for full project documentation
 - Open an issue on GitHub for bugs or questions
 
 ## Common Issues
 
-**Database Connection Failed?**
-- Check if PostgreSQL is running
-- Verify DATABASE_URL in .env
-- Ensure database exists
+**Supabase Connection Failed?**
+- Check if your Supabase project is active
+- Verify NEXT_PUBLIC_SUPABASE_URL in .env.local
+- Ensure your anon key is correct
 
 **Setup Script Failed?**
-- Run `npm run db:generate` manually
-- Check database permissions
-- Verify .env file exists
+- Check environment variables
+- Verify Supabase project exists
+- Check browser console for errors
 
 **Port Already in Use?**
 - Change port in package.json scripts

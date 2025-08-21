@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import prisma from "@/lib/prisma";
+import { supabase } from "@/lib/supabase";
 import { verifyTokenEdge } from "@/lib/auth-edge";
 
 // Get current user information
@@ -35,17 +35,13 @@ export async function GET(req) {
     }
 
     // Get user data from database
-    const userData = await prisma.user.findUnique({
-      where: { id: decoded.id },
-      select: {
-        id: true,
-        name: true,
-        email: true,
-        createdAt: true,
-      },
-    });
+    const { data: userData, error } = await supabase
+      .from('User')
+      .select('id, name, email, createdAt')
+      .eq('id', decoded.id)
+      .single();
 
-    if (!userData) {
+    if (error || !userData) {
       return NextResponse.json({
         success: false,
         error: 'User not found'

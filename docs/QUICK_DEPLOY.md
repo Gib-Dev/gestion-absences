@@ -1,4 +1,4 @@
-# 🚀 Quick Deploy Guide
+# Quick Deploy Guide
 
 ## Deploy in 5 Minutes!
 
@@ -7,24 +7,24 @@
 npm i -g vercel
 ```
 
-### 2. Set up Database (Choose one)
-- **Supabase** (Free): [supabase.com](https://supabase.com)
-- **Railway** (Free tier): [railway.app](https://railway.app)  
-- **Neon** (Free): [neon.tech](https://neon.tech)
+### 2. Set up Supabase Database
+1. Go to [supabase.com](https://supabase.com)
+2. Create a new project
+3. Copy your Project URL and anon key
 
 ### 3. Create Environment File
-Create `.env.local` with your database URL:
+Create `.env.local` with your Supabase credentials:
 ```env
-DATABASE_URL="postgresql://user:pass@host:5432/db"
-DIRECT_URL="postgresql://user:pass@host:5432/db"
-JWT_SECRET="your-secret-here"
-NEXTAUTH_SECRET="your-nextauth-secret"
-NEXTAUTH_URL="https://your-app.vercel.app"
+NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-supabase-anon-key
+JWT_SECRET=your-secret-here
+NEXTAUTH_SECRET=your-nextauth-secret
+NEXTAUTH_URL=https://your-app.vercel.app
 ```
 
 ### 4. Run Pre-deployment Check
 ```bash
-npm run deploy:check
+npm run build
 ```
 
 ### 5. Deploy!
@@ -37,12 +37,12 @@ npm run deploy
 - Settings → Environment Variables
 - Add all variables from `.env.local`
 
-### 7. Update Database
-```bash
-npx prisma db push
-```
+### 7. Test Your Deployed App
+- Visit your Vercel URL
+- Test user registration and login
+- Test absence creation and management
 
-🎉 **Your app is now live!**
+**Your app is now live!**
 
 ---
 

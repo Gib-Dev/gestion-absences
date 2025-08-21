@@ -1,18 +1,16 @@
-// app/api/absences/route.js
 import { NextResponse } from "next/server";
-import prisma from "@/lib/prisma";
+import { supabase } from "@/lib/supabase";
 import { verifyToken } from "@/lib/auth";
 import { z } from "zod";
-import { APP_CONFIG } from "@/constants";
 
 // Validation schemas
 const absenceSchema = z.object({
-  name: z.string().min(1, 'Name is required').max(APP_CONFIG.VALIDATION.NAME_MAX_LENGTH, 'Name too long'),
+  name: z.string().min(1, 'Name is required').max(100, 'Name too long'),
   date: z.string().refine((date) => {
     const parsed = new Date(date);
     return !isNaN(parsed.getTime());
   }, 'Date must be valid'),
-  reason: z.string().min(1, 'Reason is required').max(APP_CONFIG.VALIDATION.REASON_MAX_LENGTH, 'Reason too long'),
+  reason: z.string().min(1, 'Reason is required').max(500, 'Reason too long'),
 });
 
 const deleteSchema = z.object({
@@ -48,53 +46,56 @@ export async function GET(req) {
     
     // Parse query parameters
     const { searchParams } = new URL(req.url);
-    const page = parseInt(searchParams.get('page')) || APP_CONFIG.PAGINATION.DEFAULT_PAGE;
-    const limit = parseInt(searchParams.get('limit')) || APP_CONFIG.PAGINATION.DEFAULT_LIMIT;
+    const page = parseInt(searchParams.get('page')) || 1;
+    const limit = parseInt(searchParams.get('limit')) || 10;
     const search = searchParams.get('search') || '';
     
     // Validate pagination
-    if (page < 1 || limit < 1 || limit > APP_CONFIG.PAGINATION.MAX_LIMIT) {
+    if (page < 1 || limit < 1 || limit > 100) {
       return NextResponse.json({
         success: false,
         error: 'Invalid pagination parameters'
       }, { status: 400 });
     }
 
-    // Build where clause
-    const where = search ? {
-      OR: [
-        { name: { contains: search, mode: 'insensitive' } },
-        { reason: { contains: search, mode: 'insensitive' } },
-      ],
-    } : {};
+    // Build query with Supabase
+    let query = supabase
+      .from('Absence')
+      .select('id, name, date, reason, createdAt, updatedAt')
+      .order('createdAt', { ascending: false })
+      .range((page - 1) * limit, page * limit - 1);
 
-    // Get absences with pagination
-    const [absences, total] = await Promise.all([
-      prisma.absence.findMany({
-        where,
-        orderBy: { createdAt: 'desc' },
-        skip: (page - 1) * limit,
-        take: limit,
-        select: {
-          id: true,
-          name: true,
-          date: true,
-          reason: true,
-          createdAt: true,
-          updatedAt: true,
-        },
-      }),
-      prisma.absence.count({ where }),
-    ]);
+    // Add search if provided
+    if (search) {
+      query = query.or(`name.ilike.%${search}%,reason.ilike.%${search}%`);
+    }
+
+    // Execute query
+    const { data: absences, error: absencesError } = await query;
+
+    if (absencesError) {
+      console.error('Supabase error:', absencesError);
+      throw new Error(absencesError.message);
+    }
+
+    // Get total count
+    const { count: total, error: countError } = await supabase
+      .from('Absence')
+      .select('*', { count: 'exact', head: true });
+
+    if (countError) {
+      console.error('Count error:', countError);
+      throw new Error(countError.message);
+    }
 
     return NextResponse.json({
       success: true,
-      absences,
+      absences: absences || [],
       pagination: {
         page,
         limit,
-        total,
-        pages: Math.ceil(total / limit),
+        total: total || 0,
+        pages: Math.ceil((total || 0) / limit),
       },
     });
   } catch (error) {
@@ -135,23 +136,22 @@ export async function POST(req) {
 
     const { name, date, reason } = validationResult.data;
 
-    // Create new absence
-    const newAbsence = await prisma.absence.create({
-      data: {
+    // Create new absence with Supabase
+    const { data: newAbsence, error } = await supabase
+      .from('Absence')
+      .insert({
         name,
-        date: new Date(date),
+        date: new Date(date).toISOString(),
         reason,
-        userId: user.id,
-      },
-      select: {
-        id: true,
-        name: true,
-        date: true,
-        reason: true,
-        createdAt: true,
-        updatedAt: true,
-      },
-    });
+        userId: 1, // Temporary fallback until Supabase Auth
+      })
+      .select()
+      .single();
+
+    if (error) {
+      console.error('Supabase error:', error);
+      throw new Error(error.message);
+    }
 
     return NextResponse.json({
       success: true,
@@ -200,11 +200,14 @@ export async function PUT(req) {
     const { id, name, date, reason } = validationResult.data;
 
     // Check if absence exists and belongs to user
-    const existingAbsence = await prisma.absence.findFirst({
-      where: { id, userId: user.id },
-    });
+    const { data: existingAbsence, error: findError } = await supabase
+      .from('Absence')
+      .select('*')
+      .eq('id', id)
+      .eq('userId', 1) // Temporary fallback
+      .single();
 
-    if (!existingAbsence) {
+    if (findError || !existingAbsence) {
       return NextResponse.json({
         success: false,
         error: 'Absence not found or access denied'
@@ -212,22 +215,21 @@ export async function PUT(req) {
     }
 
     // Update absence
-    const updatedAbsence = await prisma.absence.update({
-      where: { id },
-      data: {
+    const { data: updatedAbsence, error: updateError } = await supabase
+      .from('Absence')
+      .update({
         name,
-        date: new Date(date),
+        date: new Date(date).toISOString(),
         reason,
-      },
-      select: {
-        id: true,
-        name: true,
-        date: true,
-        reason: true,
-        createdAt: true,
-        updatedAt: true,
-      },
-    });
+      })
+      .eq('id', id)
+      .select()
+      .single();
+
+    if (updateError) {
+      console.error('Update error:', updateError);
+      throw new Error(updateError.message);
+    }
 
     return NextResponse.json({
       success: true,
@@ -273,11 +275,14 @@ export async function DELETE(req) {
     const { id } = validationResult.data;
 
     // Check if absence exists and belongs to user
-    const existingAbsence = await prisma.absence.findFirst({
-      where: { id, userId: user.id },
-    });
+    const { data: existingAbsence, error: findError } = await supabase
+      .from('Absence')
+      .select('*')
+      .eq('id', id)
+      .eq('userId', 1) // Temporary fallback
+      .single();
 
-    if (!existingAbsence) {
+    if (findError || !existingAbsence) {
       return NextResponse.json({
         success: false,
         error: 'Absence not found or access denied'
@@ -285,9 +290,15 @@ export async function DELETE(req) {
     }
 
     // Delete absence
-    await prisma.absence.delete({
-      where: { id },
-    });
+    const { error: deleteError } = await supabase
+      .from('Absence')
+      .delete()
+      .eq('id', id);
+
+    if (deleteError) {
+      console.error('Delete error:', deleteError);
+      throw new Error(deleteError.message);
+    }
 
     return NextResponse.json({
       success: true,

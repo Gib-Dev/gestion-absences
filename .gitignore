@@ -154,15 +154,6 @@ web_modules/
 # FSEvents cache
 .fsevents
 
-# Optional REPL history
-.node_repl_history
-
-# Output of 'npm pack'
-*.tgz
-
-# Yarn Integrity file
-.yarn-integrity
-
 # dotenv environment variable files
 .env
 .env.test
@@ -180,9 +171,6 @@ dist
 
 # Gatsby files
 .cache/
-# Comment in the public line in if your project uses Gatsby and not Next.js
-# https://nextjs.org/blog/next-9-1#public-directory-support
-# public
 
 # vuepress build output
 .vuepress/dist
@@ -246,9 +234,13 @@ coverage/
 .env.test.local
 .env.production.local
 
-# Database files
+# Supabase
+.supabase/
 *.db
 *.sqlite
 *.sqlite3
-dev.db
-prisma/dev.db
+
+# Local development data
+data/
+scripts/
+prisma/

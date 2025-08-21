@@ -5,34 +5,33 @@
 ### Prerequisites
 1. Install Vercel CLI: `npm i -g vercel`
 2. Have a GitHub/GitLab account
-3. Set up a PostgreSQL database (see options below)
+3. Set up a Supabase database (see setup below)
 
-### Step 1: Database Setup
+### Step 1: Supabase Database Setup
 
-#### Option A: Use Supabase (Free PostgreSQL)
-1. Go to [supabase.com](https://supabase.com)
-2. Create a new project
-3. Get your database connection string from Settings > Database
-4. Update your environment variables
+1. **Create Supabase Project:**
+   - Go to [supabase.com](https://supabase.com)
+   - Sign up or log in
+   - Click "New Project"
+   - Choose your organization
+   - Enter project name (e.g., "gestion-absences")
+   - Set a strong database password
+   - Choose your preferred region
+   - Click "Create new project"
 
-#### Option B: Use Railway
-1. Go to [railway.app](https://railway.app)
-2. Create a new project
-3. Add PostgreSQL service
-4. Get your connection string
-
-#### Option C: Use Neon (Free PostgreSQL)
-1. Go to [neon.tech](https://neon.tech)
-2. Create a new project
-3. Get your connection string
+2. **Get Project Credentials:**
+   - In your project dashboard, go to Settings > API
+   - Copy the Project URL
+   - Copy the anon public key
+   - Save these securely
 
 ### Step 2: Environment Variables
 Create a `.env.local` file with your production values:
 
 ```env
-# Database Configuration
-DATABASE_URL="postgresql://username:password@your-production-host:5432/gestion_absences"
-DIRECT_URL="postgresql://username:password@your-production-host:5432/gestion_absences"
+# Supabase Configuration
+NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-supabase-anon-key
 
 # JWT Secret for authentication
 JWT_SECRET="your-super-secret-jwt-key-here"
@@ -66,20 +65,19 @@ NEXTAUTH_URL="https://your-domain.vercel.app"
    - Settings > Environment Variables
    - Add all variables from your `.env.local`
 
-### Step 4: Database Migration
+### Step 4: Test Your Deployment
 
-After deployment, run database migrations:
+After deployment, test your application:
 
-```bash
-# Generate Prisma client
-npx prisma generate
-
-# Push schema to production database
-npx prisma db push
-
-# Seed database (optional)
-npx prisma db seed
-```
+1. **Visit your Vercel URL**
+2. **Test user registration:**
+   - Go to `/auth/register`
+   - Create a test user
+3. **Test user login:**
+   - Go to `/auth/login`
+   - Log in with your test user
+4. **Test absence management:**
+   - Create, view, edit, and delete absences
 
 ## Option 2: Deploy to Railway (Full Stack)
 

@@ -1,8 +1,8 @@
-# 🤝 Contributing to Gestion Absences
+# Contributing to Gestion Absences
 
 Thank you for your interest in contributing to our project! This document provides guidelines and information for contributors.
 
-## 📋 Table of Contents
+## Table of Contents
 - [Code of Conduct](#code-of-conduct)
 - [Getting Started](#getting-started)
 - [Development Workflow](#development-workflow)
@@ -11,16 +11,17 @@ Thank you for your interest in contributing to our project! This document provid
 - [Pull Request Process](#pull-request-process)
 - [Reporting Issues](#reporting-issues)
 
-## 🛡️ Code of Conduct
+## Code of Conduct
 
 By participating in this project, you agree to abide by our Code of Conduct. Please be respectful and inclusive in all interactions.
 
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
 - Node.js 18.x or higher
 - npm or yarn
 - Git
+- Supabase account
 
 ### Setup
 1. Fork the repository
@@ -35,18 +36,18 @@ By participating in this project, you agree to abide by our Code of Conduct. Ple
    ```
 4. Set up environment variables:
    ```bash
-   cp env.example .env.local
+   cp env.local.example .env.local
    ```
-5. Set up the database:
-   ```bash
-   npm run db:setup
-   ```
+5. Set up Supabase database:
+   - Create a project at [supabase.com](https://supabase.com)
+   - Copy your Project URL and anon key
+   - Update `.env.local` with these values
 6. Start the development server:
    ```bash
    npm run dev
    ```
 
-## 🔄 Development Workflow
+## Development Workflow
 
 ### Branch Naming Convention
 - `feature/description` - for new features
@@ -81,7 +82,7 @@ fix(api): resolve 500 error in absences endpoint
 docs(readme): update installation instructions
 ```
 
-## 📝 Code Standards
+## Code Standards
 
 ### JavaScript/React Standards
 - Use functional components with hooks
@@ -107,7 +108,7 @@ app/
 └── [pages]/        # Page components
 ```
 
-## 🧪 Testing
+## Testing
 
 ### Running Tests
 ```bash
@@ -130,7 +131,7 @@ npm run type-check
 - Use descriptive test names
 - Test both success and error cases
 
-## 🔄 Pull Request Process
+## Pull Request Process
 
 1. **Create a feature branch** from `main`
 2. **Make your changes** following the code standards
@@ -149,7 +150,7 @@ npm run type-check
 - [ ] Responsive design works on all devices
 - [ ] Accessibility standards are met
 
-## 🐛 Reporting Issues
+## Reporting Issues
 
 ### Before Reporting
 1. Check existing issues to avoid duplicates
@@ -169,7 +170,7 @@ Use the provided issue templates:
 - Screenshots if applicable
 - Console errors if any
 
-## 🏷️ Labels
+## Labels
 
 We use the following labels to categorize issues and PRs:
 - `bug` - Something isn't working
@@ -180,7 +181,7 @@ We use the following labels to categorize issues and PRs:
 - `priority: high` - High priority issues
 - `priority: low` - Low priority issues
 
-## 📞 Getting Help
+## Getting Help
 
 If you need help:
 1. Check the [documentation](docs/)
@@ -188,7 +189,7 @@ If you need help:
 3. Create a new issue with the appropriate template
 4. Join our community discussions
 
-## 🎉 Recognition
+## Recognition
 
 Contributors will be recognized in:
 - Project README

@@ -1,41 +1,28 @@
-import prisma from "@/lib/prisma";
-import bcrypt from "bcryptjs";
-import jwt from "jsonwebtoken";
+import { NextResponse } from "next/server";
+import { supabase } from "@/lib/supabase";
 
-export async function POST(req) {
+export async function GET(req) {
   try {
-    const { email, password } = await req.json();
-    const user = await prisma.user.findUnique({ where: { email } });
-
-    if (!user) {
-      return Response.json(
-        { error: "Utilisateur non trouvé" },
-        { status: 404 }
-      );
+    const { searchParams } = new URL(req.url);
+    const email = searchParams.get('email');
+    
+    if (!email) {
+      return NextResponse.json({ error: 'Email parameter is required' }, { status: 400 });
     }
 
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) {
-      return Response.json(
-        { error: "Mot de passe incorrect" },
-        { status: 401 }
-      );
+    const { data: user, error } = await supabase
+      .from('User')
+      .select('*')
+      .eq('email', email)
+      .single();
+
+    if (error && error.code !== 'PGRST116') {
+      throw error;
     }
 
-    const token = jwt.sign(
-      { id: user.id, email: user.email },
-      process.env.JWT_SECRET,
-      { expiresIn: "1h" }
-    );
-
-    return Response.json(
-      { token, user: { id: user.id, email: user.email, name: user.name } },
-      { status: 200 }
-    );
+    return NextResponse.json({ user: user || null });
   } catch (error) {
-    return Response.json(
-      { error: "Erreur dans l'authentification" },
-      { status: 500 }
-    );
+    console.error('Error in GET /auth:', error);
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
