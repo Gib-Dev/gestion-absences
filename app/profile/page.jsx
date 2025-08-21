@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { FaSpinner, FaUser, FaEnvelope, FaCalendar, FaEdit, FaSave, FaTimes } from "react-icons/fa";
 import { UI_TEXTS } from "@/constants";
-import PageLayout from "@/components/PageLayout";
 
 export default function Profile() {
   const { user, loading, isAuthenticated } = useAuth();
@@ -33,14 +32,14 @@ export default function Profile() {
 
   if (loading) {
     return (
-      <PageLayout>
+      <div className="p-6">
         <div className="min-h-screen bg-ghostwhite flex items-center justify-center">
           <div className="text-center">
             <FaSpinner className="animate-spin text-4xl text-blue-600 mx-auto mb-4" />
             <p className="text-gray-600">{UI_TEXTS.COMMON.LOADING}</p>
           </div>
         </div>
-      </PageLayout>
+      </div>
     );
   }
 
@@ -72,12 +71,10 @@ export default function Profile() {
   };
 
   return (
-    <PageLayout requireAuth={true}>
-      <div className="container mx-auto px-4 py-8">
-        <h1 className="text-3xl font-bold text-gray-800 mb-8">Profil</h1>
-        <ProfileContent />
-      </div>
-    </PageLayout>
+    <div className="p-6">
+      <h1 className="text-3xl font-bold text-gray-800 mb-8">Profil</h1>
+      <ProfileContent />
+    </div>
   );
 }
 
@@ -104,17 +101,7 @@ function ProfileContent() {
         <div>
           <label className="text-sm font-medium text-gray-700">Membre depuis</label>
           <p className="mt-1 text-lg text-gray-900">
-            {(() => {
-              try {
-                return new Date(user.createdAt).toLocaleDateString('fr-FR', {
-                  year: 'numeric',
-                  month: 'long',
-                  day: 'numeric'
-                });
-              } catch (error) {
-                return 'Date inconnue';
-              }
-            })()}
+            {user.createdAt ? new Date(user.createdAt).toLocaleDateString('fr-FR') : 'N/A'}
           </p>
         </div>
       </div>

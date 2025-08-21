@@ -4,7 +4,7 @@ import { AuthProvider } from "@/context/AuthContext";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { APP_CONFIG } from "@/constants";
-import Footer from "@/components/Footer";
+import PageWrapper from "@/components/PageWrapper";
 
 export const metadata = {
   title: "Gestion Absences",
@@ -14,12 +14,17 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="fr">
+      <head>
+        <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+        <link rel="shortcut icon" href="/favicon.svg" type="image/svg+xml" />
+        <link rel="apple-touch-icon" href="/favicon.svg" />
+        <meta name="theme-color" content="#3B82F6" />
+      </head>
       <body className="flex flex-col min-h-screen">
         <AuthProvider>
-          <main className="flex-1">
+          <PageWrapper>
             {children}
-          </main>
-          <Footer />
+          </PageWrapper>
           <ToastContainer
             position={APP_CONFIG.UI.TOAST_POSITION}
             autoClose={APP_CONFIG.UI.TOAST_AUTO_CLOSE}

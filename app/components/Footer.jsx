@@ -50,7 +50,7 @@ export default function Footer() {
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
                     {/* Company Info */}
                     <FooterSection title={UI_TEXTS.FOOTER.SECTIONS.COMPANY_INFO} className="lg:col-span-1">
-                        <div className="flex items-center mb-4">
+                        <Link href="/" className="flex items-center mb-4 group hover:scale-105 transition-transform duration-200">
                             <Image 
                                 src="/images/Logo.webp" 
                                 alt="Gestion Absences" 
@@ -58,10 +58,10 @@ export default function Footer() {
                                 height={40} 
                                 className="rounded-full shadow-md"
                             />
-                            <span className="ml-3 text-lg font-bold text-magenta">
+                            <span className="ml-3 text-lg font-bold text-magenta group-hover:text-magenta/80 transition-colors duration-200">
                                 Gestion Absences
                             </span>
-                        </div>
+                        </Link>
                         <p className="text-gray-600 text-sm leading-relaxed">
                             {UI_TEXTS.FOOTER.COMPANY_DESCRIPTION}
                         </p>
