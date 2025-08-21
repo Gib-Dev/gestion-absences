@@ -14,20 +14,21 @@ jobs:
       matrix:
         node-version: [18.x, 20.x]
 
-    services:
-      postgres:
-        image: postgres:15
-        env:
-          POSTGRES_PASSWORD: postgres
-          POSTGRES_USER: postgres
-          POSTGRES_DB: test_db
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-        ports:
-          - 5432:5432
+    # Temporarily disabled PostgreSQL service for Supabase migration
+    # services:
+    #   postgres:
+    #     image: postgres:15
+    #     env:
+    #       POSTGRES_PASSWORD: postgres
+    #       POSTGRES_USER: postgres
+    #       POSTGRES_DB: test_db
+    #     options: >-
+    #       --health-cmd pg_isready
+    #       --health-interval 10s
+    #       --health-timeout 5s
+    #       --health-retries 5
+    #     ports:
+    #       - 5432:5432
 
     steps:
     - uses: actions/checkout@v4
@@ -41,14 +42,16 @@ jobs:
     - name: Install dependencies
       run: npm ci
     
-    - name: Setup environment
-      run: |
-        echo "DATABASE_URL=postgresql://postgres:postgres@localhost:5432/test_db" >> .env
-        echo "JWT_SECRET=test_secret_key_for_ci" >> .env
-        echo "NODE_ENV=test" >> .env
+    # Temporarily disabled environment setup for Prisma
+    # - name: Setup environment
+    #   run: |
+    #     echo "DATABASE_URL=postgresql://postgres:postgres@localhost:5432/test_db" >> .env
+    #     echo "JWT_SECRET=test_secret_key_for_ci" >> .env
+    #     echo "NODE_ENV=test" >> .env
     
-    - name: Generate Prisma client
-      run: npx prisma generate
+    # Temporarily disabled Prisma client generation
+    # - name: Generate Prisma client
+    #   run: npx prisma generate
     
     - name: Run linting
       run: npm run lint
