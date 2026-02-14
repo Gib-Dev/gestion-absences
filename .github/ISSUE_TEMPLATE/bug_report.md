@@ -1,40 +1,37 @@
 ---
-name: 🐛 Bug Report
+name: Bug Report
 about: Create a report to help us improve
 title: '[BUG] '
 labels: ['bug']
 assignees: ''
 ---
 
-## 🐛 Bug Description
+## Description
 A clear and concise description of what the bug is.
 
-## 🔄 Steps to Reproduce
+## Steps to Reproduce
 1. Go to '...'
-2. Click on '....'
-3. Scroll down to '....'
-4. See error
+2. Click on '...'
+3. See error
 
-## ✅ Expected Behavior
+## Expected Behavior
 A clear and concise description of what you expected to happen.
 
-## ❌ Actual Behavior
+## Actual Behavior
 A clear and concise description of what actually happened.
 
-## 📸 Screenshots
+## Screenshots
 If applicable, add screenshots to help explain your problem.
 
-## 🖥️ Environment
+## Environment
 - **OS**: [e.g. Windows 10, macOS, Ubuntu]
 - **Browser**: [e.g. Chrome, Firefox, Safari]
-- **Version**: [e.g. 22]
-- **Node.js Version**: [e.g. 18.17.0]
+- **Node.js Version**: [e.g. 18.x]
 
-## 📱 Additional Context
+## Console Errors
+```
+Paste errors here
+```
+
+## Additional Context
 Add any other context about the problem here.
-
-## 🔍 Console Errors
-If there are any console errors, please paste them here:
-```
-Error message here
-```

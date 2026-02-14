@@ -1,39 +1,61 @@
-// ✅ middleware.js
 import { NextResponse } from "next/server";
+import { verifyTokenEdge } from "@/lib/auth-edge";
+
+const PROTECTED_API_ROUTES = [
+  "/api/auth/me",
+  "/api/absences",
+  "/api/users",
+];
+
+function isProtectedRoute(pathname) {
+  return PROTECTED_API_ROUTES.some((route) => pathname.startsWith(route));
+}
 
 export async function middleware(request) {
   try {
-    // Pour la navigation côté client, on laisse passer
-    // L'authentification sera gérée côté client par le composant PageLayout
-    // Le middleware ne bloque que les routes API qui nécessitent une authentification
-    
-    // Si c'est une route API protégée, on vérifie l'en-tête Authorization
-    if (request.nextUrl.pathname.startsWith('/api/') && 
-        (request.nextUrl.pathname.startsWith('/api/auth/me') || 
-         request.nextUrl.pathname.startsWith('/api/absences'))) {
-      
-      const authHeader = request.headers.get("authorization");
-      if (!authHeader || !authHeader.startsWith('Bearer ')) {
-        return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-      }
+    if (!isProtectedRoute(request.nextUrl.pathname)) {
+      return NextResponse.next();
     }
-    
-    // Pour toutes les autres routes, on laisse passer
-    // L'authentification sera gérée côté client
-    return NextResponse.next();
-    
+
+    const authHeader = request.headers.get("authorization");
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+      return NextResponse.json(
+        { success: false, error: "Non autorise" },
+        { status: 401 }
+      );
+    }
+
+    const token = authHeader.substring(7);
+    const decoded = await verifyTokenEdge(token);
+
+    if (!decoded) {
+      return NextResponse.json(
+        { success: false, error: "Token invalide ou expire" },
+        { status: 401 }
+      );
+    }
+
+    // Pass user info to the API route via headers
+    const requestHeaders = new Headers(request.headers);
+    requestHeaders.set("x-user-id", String(decoded.id));
+    requestHeaders.set("x-user-email", decoded.email);
+
+    return NextResponse.next({
+      request: { headers: requestHeaders },
+    });
   } catch (error) {
     console.error("Middleware error:", error);
-    return NextResponse.next();
+    return NextResponse.json(
+      { success: false, error: "Erreur d'authentification" },
+      { status: 401 }
+    );
   }
 }
 
-// Spécification des routes concernées
 export const config = {
   matcher: [
     "/api/auth/me",
-    "/api/absences/:path*"
+    "/api/absences/:path*",
+    "/api/users/:path*",
   ],
 };
-
-

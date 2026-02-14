@@ -45,7 +45,7 @@ export const ERROR_MESSAGES = {
     AUTH_FAILED: 'Échec de l\'authentification',
   },
   SUCCESS: {
-    ABSENCE_CREATED: '✅ Absence enregistrée avec succès !',
+    ABSENCE_CREATED: 'Absence enregistree avec succes',
     ABSENCE_DELETED: 'Absence supprimée avec succès',
   },
 };
@@ -59,8 +59,8 @@ export const UI_TEXTS = {
     CONFIRM: 'Confirmer',
   },
   ABSENCES: {
-    TITLE: '📋 Ajouter une absence',
-    LIST_TITLE: '📌 Liste des absences',
+    TITLE: 'Ajouter une absence',
+    LIST_TITLE: 'Liste des absences',
     NAME_LABEL: 'Nom *',
     DATE_LABEL: 'Date *',
     REASON_LABEL: 'Raison *',

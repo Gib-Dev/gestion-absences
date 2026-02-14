@@ -2,67 +2,39 @@ name: CI
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
-  test:
+  build:
     runs-on: ubuntu-latest
 
     strategy:
       matrix:
         node-version: [18.x, 20.x]
 
-    # Temporarily disabled PostgreSQL service for Supabase migration
-    # services:
-    #   postgres:
-    #     image: postgres:15
-    #     env:
-    #       POSTGRES_PASSWORD: postgres
-    #       POSTGRES_USER: postgres
-    #       POSTGRES_DB: test_db
-    #     options: >-
-    #       --health-cmd pg_isready
-    #       --health-interval 10s
-    #       --health-timeout 5s
-    #       --health-retries 5
-    #     ports:
-    #       - 5432:5432
-
     steps:
-    - uses: actions/checkout@v4
-    
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v4
-      with:
-        node-version: ${{ matrix.node-version }}
-        cache: 'npm'
-    
-    - name: Install dependencies
-      run: npm ci
-    
-    # Setup Supabase environment variables for build
-    - name: Setup Supabase environment
-      run: |
-        echo "NEXT_PUBLIC_SUPABASE_URL=https://test-project.supabase.co" >> .env
-        echo "NEXT_PUBLIC_SUPABASE_ANON_KEY=test-anon-key-for-ci" >> .env
-        echo "JWT_SECRET=test_jwt_secret_for_ci" >> .env
-        echo "NODE_ENV=test" >> .env
-    
-    # Temporarily disabled environment setup for Prisma
-    # - name: Setup environment
-    #   run: |
-    #     echo "DATABASE_URL=postgresql://postgres:postgres@localhost:5432/test_db" >> .env
-    #     echo "JWT_SECRET=test_secret_key_for_ci" >> .env
-    #     echo "NODE_ENV=test" >> .env
-    
-    # Temporarily disabled Prisma client generation
-    # - name: Generate Prisma client
-    #   run: npx prisma generate
-    
-    - name: Run linting
-      run: npm run lint
-    
-    - name: Build application
-      run: npm run build
+      - uses: actions/checkout@v4
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Setup environment
+        run: |
+          echo "NEXT_PUBLIC_SUPABASE_URL=https://test-project.supabase.co" >> .env
+          echo "NEXT_PUBLIC_SUPABASE_ANON_KEY=test-anon-key-for-ci" >> .env
+          echo "JWT_SECRET=test_jwt_secret_for_ci" >> .env
+          echo "NODE_ENV=test" >> .env
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Build
+        run: npm run build

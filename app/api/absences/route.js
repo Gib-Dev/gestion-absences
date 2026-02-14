@@ -143,7 +143,7 @@ export async function POST(req) {
         name,
         date: new Date(date).toISOString(),
         reason,
-        userId: 1, // Temporary fallback until Supabase Auth
+        userId: user.id,
       })
       .select()
       .single();
@@ -204,7 +204,7 @@ export async function PUT(req) {
       .from('Absence')
       .select('*')
       .eq('id', id)
-      .eq('userId', 1) // Temporary fallback
+      .eq('userId', user.id)
       .single();
 
     if (findError || !existingAbsence) {
@@ -279,7 +279,7 @@ export async function DELETE(req) {
       .from('Absence')
       .select('*')
       .eq('id', id)
-      .eq('userId', 1) // Temporary fallback
+      .eq('userId', user.id)
       .single();
 
     if (findError || !existingAbsence) {

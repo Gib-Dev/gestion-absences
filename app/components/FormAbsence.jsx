@@ -69,7 +69,7 @@ const FormAbsence = memo(function FormAbsence() {
                 // Reset form
                 setFormData({ name: "", date: "", reason: "" });
             } else {
-                toast.error(`❌ ${result.error}`);
+                toast.error(result.error);
             }
         } catch (err) {
             toast.error(ERROR_MESSAGES.API.CREATE_FAILED);

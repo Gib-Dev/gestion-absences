@@ -1,33 +1,25 @@
-## 📋 Description
-<!-- Provide a brief description of the changes -->
+## Description
+<!-- Brief description of the changes -->
 
-## 🎯 Type of Change
-- [ ] 🐛 Bug fix (non-breaking change which fixes an issue)
-- [ ] ✨ New feature (non-breaking change which adds functionality)
-- [ ] 💥 Breaking change (fix or feature that would cause existing functionality to not work as expected)
-- [ ] 📚 Documentation update
-- [ ] 🎨 Style/UI update
-- [ ] ♻️ Refactoring (no functional changes)
-- [ ] ⚡ Performance improvement
-- [ ] ✅ Test addition or update
+## Type of Change
+- [ ] Bug fix
+- [ ] New feature
+- [ ] Breaking change
+- [ ] Documentation update
+- [ ] Refactoring
+- [ ] Performance improvement
 
-## 🔍 Testing
-- [ ] I have tested this change locally
-- [ ] I have added/updated tests for this change
+## Testing
+- [ ] Tested locally
 - [ ] All existing tests pass
 
-## 📸 Screenshots (if applicable)
-<!-- Add screenshots to help explain your changes -->
+## Screenshots (if applicable)
 
-## ✅ Checklist
-- [ ] My code follows the project's style guidelines
-- [ ] I have performed a self-review of my code
-- [ ] I have commented my code, particularly in hard-to-understand areas
-- [ ] I have made corresponding changes to the documentation
-- [ ] My changes generate no new warnings
-- [ ] I have added tests that prove my fix is effective or that my feature works
-- [ ] New and existing unit tests pass locally with my changes
+## Checklist
+- [ ] Code follows the project style guidelines
+- [ ] Self-review completed
+- [ ] Documentation updated if needed
+- [ ] No new warnings generated
 
-## 🔗 Related Issues
-<!-- Link to any related issues -->
-Closes #(issue number)
+## Related Issues
+Closes #

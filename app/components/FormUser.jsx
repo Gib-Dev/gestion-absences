@@ -18,7 +18,7 @@ export default function FormUser({ user, onSave }) {
 
         const userData = { name, email, role };
         onSave(userData);
-        toast.success(user ? "Utilisateur mis à jour ✅" : "Utilisateur ajouté ✅");
+        toast.success(user ? "Utilisateur mis a jour" : "Utilisateur ajoute");
         setName("");
         setEmail("");
         setRole("user");
@@ -26,7 +26,7 @@ export default function FormUser({ user, onSave }) {
 
     return (
         <form onSubmit={handleSubmit} className="bg-white p-4 rounded-lg shadow-md space-y-4">
-            <h3 className="font-semibold text-lg">👤 {user ? "Modifier" : "Ajouter"} un utilisateur</h3>
+            <h3 className="font-semibold text-lg">{user ? "Modifier" : "Ajouter"} un utilisateur</h3>
             <input
                 type="text"
                 placeholder="Nom"
