@@ -7,10 +7,47 @@ import {
   hashPassword,
   comparePassword,
 } from "@/lib/auth";
+import { loginLimiter, registerLimiter } from "@/lib/rate-limit";
+
+function getClientIp(req) {
+  return (
+    req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
+    req.headers.get("x-real-ip") ||
+    "unknown"
+  );
+}
+
+function rateLimitResponse(result) {
+  return NextResponse.json(
+    {
+      success: false,
+      error: `Trop de tentatives. Reessayez dans ${result.retryAfter}s`,
+    },
+    {
+      status: 429,
+      headers: { "Retry-After": String(result.retryAfter) },
+    }
+  );
+}
+
+function setCookie(response, token) {
+  response.cookies.set("auth_token", token, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "lax",
+    path: "/",
+    maxAge: 60 * 60 * 24, // 24h
+  });
+  return response;
+}
 
 // User registration
 export async function POST(req) {
   try {
+    const ip = getClientIp(req);
+    const limit = registerLimiter(ip);
+    if (!limit.allowed) return rateLimitResponse(limit);
+
     const body = await req.json();
 
     const validationResult = registerSchema.safeParse(body);
@@ -56,10 +93,11 @@ export async function POST(req) {
 
     const token = generateToken({ id: user.id, email: user.email });
 
-    return NextResponse.json(
-      { success: true, message: "Inscription reussie", user, token },
+    const response = NextResponse.json(
+      { success: true, message: "Inscription reussie", user },
       { status: 201 }
     );
+    return setCookie(response, token);
   } catch (error) {
     console.error("Registration error:", error);
 
@@ -80,6 +118,10 @@ export async function POST(req) {
 // User login
 export async function PUT(req) {
   try {
+    const ip = getClientIp(req);
+    const limit = loginLimiter(ip);
+    if (!limit.allowed) return rateLimitResponse(limit);
+
     const body = await req.json();
 
     const validationResult = loginSchema.safeParse(body);
@@ -120,12 +162,12 @@ export async function PUT(req) {
 
     const token = generateToken({ id: user.id, email: user.email });
 
-    return NextResponse.json({
+    const response = NextResponse.json({
       success: true,
       message: "Connexion reussie",
       user: { id: user.id, name: user.name, email: user.email },
-      token,
     });
+    return setCookie(response, token);
   } catch (error) {
     console.error("Login error:", error);
 

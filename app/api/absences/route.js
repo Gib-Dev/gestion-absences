@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
-import { verifyToken } from "@/lib/auth";
 import { z } from "zod";
 
 // Validation schemas
@@ -17,25 +16,16 @@ const deleteSchema = z.object({
   id: z.number().int().positive('Invalid ID'),
 });
 
-// Helper function to authenticate user
+// Read user from middleware headers (token already verified by middleware)
 function authenticateUser(req) {
-  const authHeader = req.headers.get("authorization");
-  
-  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+  const userId = req.headers.get("x-user-id");
+  const userEmail = req.headers.get("x-user-email");
+
+  if (!userId) {
     throw new Error('No valid authorization header');
   }
 
-  const token = authHeader.substring(7);
-  
-  try {
-    const decoded = verifyToken(token);
-    if (!decoded) {
-      throw new Error('Invalid token');
-    }
-    return decoded;
-  } catch (error) {
-    throw new Error('Token verification failed');
-  }
+  return { id: parseInt(userId, 10), email: userEmail };
 }
 
 // Get all absences (with pagination)

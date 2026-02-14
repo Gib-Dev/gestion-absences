@@ -6,7 +6,6 @@ export const APP_CONFIG = {
     MAX_LIMIT: 100,
   },
   AUTH: {
-    TOKEN_KEY: 'authToken',
     TOKEN_EXPIRY: '24h',
   },
   VALIDATION: {

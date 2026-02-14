@@ -4,20 +4,8 @@
 import { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 import { FaEdit, FaTrash } from "react-icons/fa";
-import { APP_CONFIG } from "@/constants";
+import apiService from "@/lib/api";
 import FormUser from "./FormUser";
-
-function getToken() {
-    return localStorage.getItem(APP_CONFIG.AUTH.TOKEN_KEY);
-}
-
-function authHeaders() {
-    const token = getToken();
-    return {
-        "Content-Type": "application/json",
-        ...(token && { Authorization: `Bearer ${token}` }),
-    };
-}
 
 export default function UserList() {
     const [users, setUsers] = useState([]);
@@ -29,15 +17,7 @@ export default function UserList() {
 
     const fetchUsers = async () => {
         try {
-            const res = await fetch("/api/users", {
-                headers: authHeaders(),
-            });
-            if (!res.ok) {
-                const errorData = await res.json();
-                throw new Error(errorData.error || `Erreur ${res.status}`);
-            }
-
-            const data = await res.json();
+            const data = await apiService.get("/api/users");
             setUsers(data.users || []);
         } catch (err) {
             console.error(err);
@@ -47,20 +27,13 @@ export default function UserList() {
 
     const handleSave = async (userData) => {
         try {
-            const method = editingUser ? "PUT" : "POST";
-            const body = editingUser
-                ? { id: editingUser.id, ...userData }
-                : userData;
-
-            const res = await fetch("/api/users", {
-                method,
-                headers: authHeaders(),
-                body: JSON.stringify(body),
-            });
-
-            if (!res.ok) {
-                const errorData = await res.json();
-                throw new Error(errorData.error || "Erreur lors de la sauvegarde");
+            if (editingUser) {
+                await apiService.put("/api/users", {
+                    id: editingUser.id,
+                    ...userData,
+                });
+            } else {
+                await apiService.post("/api/users", userData);
             }
 
             fetchUsers();
@@ -72,17 +45,7 @@ export default function UserList() {
 
     const handleDelete = async (id) => {
         try {
-            const res = await fetch("/api/users", {
-                method: "DELETE",
-                headers: authHeaders(),
-                body: JSON.stringify({ id }),
-            });
-
-            if (!res.ok) {
-                const errorData = await res.json();
-                throw new Error(errorData.error || "Erreur lors de la suppression");
-            }
-
+            await apiService.delete("/api/users", { id });
             toast.success("Utilisateur supprime");
             fetchUsers();
         } catch (err) {

@@ -1,19 +1,26 @@
 import { NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
 import { verifyToken } from "@/lib/auth";
+import { cookies } from "next/headers";
 
 export async function GET(req) {
   try {
-    const authHeader = req.headers.get("authorization");
+    // Read token from cookie (primary) or Authorization header (fallback)
+    const cookieStore = await cookies();
+    const cookieToken = cookieStore.get("auth_token")?.value;
 
-    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    const authHeader = req.headers.get("authorization");
+    const headerToken =
+      authHeader?.startsWith("Bearer ") ? authHeader.substring(7) : null;
+
+    const token = cookieToken || headerToken;
+
+    if (!token) {
       return NextResponse.json(
         { success: false, error: "Non autorise" },
         { status: 401 }
       );
     }
-
-    const token = authHeader.substring(7);
 
     let decoded;
     try {
