@@ -19,6 +19,13 @@ export default function LoginPage() {
   const { login, error, clearError, isAuthenticated, user } = useAuth();
   const router = useRouter();
 
+  // Redirect if already authenticated
+  useEffect(() => {
+    if (isAuthenticated) {
+      router.replace("/dashboard");
+    }
+  }, [isAuthenticated, router]);
+
   // Show error toast when error changes
   useEffect(() => {
     if (error) {

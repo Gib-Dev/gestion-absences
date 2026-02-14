@@ -23,6 +23,13 @@ export default function RegisterPage() {
   const { register, error, clearError, isAuthenticated } = useAuth();
   const router = useRouter();
 
+  // Redirect if already authenticated
+  useEffect(() => {
+    if (isAuthenticated) {
+      router.replace("/dashboard");
+    }
+  }, [isAuthenticated, router]);
+
   // Show error toast when error changes
   useEffect(() => {
     if (error) {

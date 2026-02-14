@@ -37,7 +37,7 @@ class ApiService {
       
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
-        const errorMessage = errorData.error || errorData.message || `HTTP error! status: ${response.status}`;
+        const errorMessage = errorData.message || errorData.error || `HTTP error! status: ${response.status}`;
         
         // If it's an auth error (401), clear the token
         if (response.status === 401) {
